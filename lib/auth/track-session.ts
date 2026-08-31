@@ -7,6 +7,24 @@ export type TrackSession = {
   customer_id: string;
 };
 
+export type TrackTicket = {
+  id: string;
+  ticket_number: string;
+  type: string;
+  subject: string;
+  status: string;
+  priority: string;
+  created_at: string;
+};
+
+export type TrackNotification = {
+  id: string;
+  title: string;
+  body: string;
+  is_read: boolean;
+  created_at: string;
+};
+
 /**
  * Verifies the httpOnly track-portal cookie. Returns null if missing/expired/
  * invalid — callers must redirect to /track (never render portal data).
@@ -60,5 +78,9 @@ export async function getTrackPortalData(session: TrackSession) {
     .order('created_at', { ascending: false })
     .limit(20);
 
-  return { installation, tickets: tickets ?? [], notifications: notifications ?? [] };
+  return {
+    installation,
+    tickets: (tickets ?? []) as TrackTicket[],
+    notifications: (notifications ?? []) as TrackNotification[],
+  };
 }
