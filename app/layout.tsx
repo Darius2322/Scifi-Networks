@@ -33,6 +33,7 @@ export const metadata: Metadata = {
     type: 'website',
   },
   manifest: '/manifest.json',
+  themeColor: '#0B1220',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

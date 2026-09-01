@@ -14,8 +14,9 @@ export async function middleware(req: NextRequest) {
 
   const isStaffArea = pathname.startsWith('/staff') && pathname !== '/staff/login';
   const isAdminArea = pathname.startsWith('/wp-admin') && pathname !== '/wp-admin/login';
+  const isAgentArea = pathname.startsWith('/track/agent') && pathname !== '/track/agent';
 
-  if (!isStaffArea && !isAdminArea) {
+  if (!isStaffArea && !isAdminArea && !isAgentArea) {
     return NextResponse.next();
   }
 
@@ -44,7 +45,7 @@ export async function middleware(req: NextRequest) {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    const loginPath = isAdminArea ? '/wp-admin/login' : '/staff/login';
+    const loginPath = isAdminArea ? '/wp-admin/login' : isAgentArea ? '/track/agent' : '/staff/login';
     const redirectUrl = new URL(loginPath, req.url);
     redirectUrl.searchParams.set('next', pathname);
     return NextResponse.redirect(redirectUrl);
@@ -60,5 +61,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/staff/:path*', '/wp-admin/:path*'],
+  matcher: ['/staff/:path*', '/wp-admin/:path*', '/track/agent/:path*'],
 };

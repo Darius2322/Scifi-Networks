@@ -20,7 +20,7 @@ export default async function HomePage() {
         <section className="border-b border-ink-950/10">
           <div className="container-page grid lg:grid-cols-[1.1fr_0.9fr] gap-12 py-16 lg:py-24 items-center">
             <div>
-              <p className="text-sm font-medium text-signal-500">SciFi Networks</p>
+              <p className="text-sm font-medium text-signal-500">A network that everyone is using but you are not.</p>
               <h1 className="mt-3 font-display text-4xl sm:text-5xl font-semibold leading-[1.08] text-ink-950">
                 Reliable Internet. Built Around You.
               </h1>
