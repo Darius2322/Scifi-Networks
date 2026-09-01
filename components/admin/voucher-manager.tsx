@@ -11,7 +11,7 @@ type Voucher = {
   value_kes: number | null;
   issued_at: string;
   expires_at: string | null;
-  agents: { customers: { full_name: string } | { full_name: string }[] | null } | null;
+  agents: any;
 };
 
 const STATUS_STYLE: Record<string, string> = {

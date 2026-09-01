@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 const NAV = [
   { href: '/packages', label: 'Packages' },
@@ -50,34 +53,71 @@ function LogoMark() {
 }
 
 function MobileNav() {
-  // Minimal, dependency-free mobile menu using a details/summary disclosure
-  // so it works without client JS, then progressively enhanced if needed.
+  const [open, setOpen] = useState(false);
+
+  // Prevent background scroll while the menu is open (spec section 50).
+  useEffect(() => {
+    if (open) {
+      const original = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = original;
+      };
+    }
+  }, [open]);
+
+  // Close on route change / escape for good measure.
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') setOpen(false);
+    }
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, []);
+
   return (
-    <details className="md:hidden relative">
-      <summary className="list-none cursor-pointer p-2 -mr-2" aria-label="Open menu">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M4 6h16M4 12h16M4 18h16" stroke="#0B1220" strokeWidth="1.8" strokeLinecap="round" />
-        </svg>
-      </summary>
-      <div className="fixed inset-x-0 top-16 bottom-0 bg-paper-50 border-t border-ink-950/10 p-5 overflow-y-auto">
-        <nav className="flex flex-col gap-1">
-          {NAV.map((item) => (
+    <div className="md:hidden">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-label={open ? 'Close menu' : 'Open menu'}
+        aria-expanded={open}
+        className="p-2 -mr-2"
+      >
+        {open ? (
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" stroke="#0B1220" strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
+        ) : (
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M4 6h16M4 12h16M4 18h16" stroke="#0B1220" strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
+        )}
+      </button>
+
+      {open && (
+        <div className="fixed inset-x-0 top-16 bottom-0 bg-paper-50 border-t border-ink-950/10 p-5 overflow-y-auto z-50">
+          <nav className="flex flex-col gap-1">
+            {NAV.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={() => setOpen(false)}
+                className="py-3 text-base font-medium text-ink-950 border-b border-ink-950/5"
+              >
+                {item.label}
+              </Link>
+            ))}
             <Link
-              key={item.href}
-              href={item.href}
-              className="py-3 text-base font-medium text-ink-950 border-b border-ink-950/5"
+              href="/get-connected"
+              onClick={() => setOpen(false)}
+              className="mt-4 inline-flex items-center justify-center rounded-sm bg-signal-500 px-4 py-3 text-sm font-medium text-white"
             >
-              {item.label}
+              Get Connected
             </Link>
-          ))}
-          <Link
-            href="/get-connected"
-            className="mt-4 inline-flex items-center justify-center rounded-sm bg-signal-500 px-4 py-3 text-sm font-medium text-white"
-          >
-            Get Connected
-          </Link>
-        </nav>
-      </div>
-    </details>
+          </nav>
+        </div>
+      )}
+    </div>
   );
 }
