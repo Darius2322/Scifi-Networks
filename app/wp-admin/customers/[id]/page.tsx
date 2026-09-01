@@ -35,7 +35,7 @@ export default async function AdminCustomerDetailPage({ params }: { params: { id
 
       <div className="mt-8 grid lg:grid-cols-3 gap-5">
         <ListPanel title="Installations">
-          {(installations ?? []).map((i) => (
+          {(installations ?? []).map((i: any) => (
             <li key={i.id} className="py-2.5 text-sm">
               <p className="font-medium text-ink-950">{i.ticket_number}</p>
               <p className="text-ink-800/60 capitalize">{i.status.replace('_', ' ')}</p>
@@ -44,7 +44,7 @@ export default async function AdminCustomerDetailPage({ params }: { params: { id
         </ListPanel>
 
         <ListPanel title="Tickets">
-          {(tickets ?? []).map((t) => (
+          {(tickets ?? []).map((t: any) => (
             <li key={t.id} className="py-2.5 text-sm">
               <p className="font-medium text-ink-950">{t.subject}</p>
               <p className="text-ink-800/60">{t.ticket_number} · {t.status.replace('_', ' ')}</p>
@@ -53,7 +53,7 @@ export default async function AdminCustomerDetailPage({ params }: { params: { id
         </ListPanel>
 
         <ListPanel title="Payments">
-          {(payments ?? []).map((p) => (
+          {(payments ?? []).map((p: any) => (
             <li key={p.id} className="py-2.5 text-sm">
               <p className="font-medium text-ink-950">KES {Number(p.amount_kes).toLocaleString()}</p>
               <p className="text-ink-800/60 capitalize">{p.method} · {p.status}</p>

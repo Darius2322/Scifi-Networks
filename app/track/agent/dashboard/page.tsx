@@ -73,7 +73,7 @@ export default async function AgentDashboardPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-ink-950/10">
-                  {vouchers.map((v) => (
+                  {vouchers.map((v: any) => (
                     <tr key={v.id}>
                       <td className="py-2.5 font-medium text-ink-950">{v.code}</td>
                       <td className="py-2.5">
@@ -100,7 +100,7 @@ export default async function AgentDashboardPage() {
               <p className="mt-3 text-sm text-ink-800/60">No reports submitted yet.</p>
             ) : (
               <ul className="mt-4 divide-y divide-ink-950/10">
-                {tickets.map((t) => (
+                {tickets.map((t: any) => (
                   <li key={t.id} className="py-3 flex items-center justify-between text-sm">
                     <div>
                       <p className="font-medium text-ink-950">{t.subject}</p>

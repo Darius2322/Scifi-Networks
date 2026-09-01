@@ -16,7 +16,7 @@ export default async function AdminSitesPage() {
     .select('id, name, slug, is_active, network_status, manager_id')
     .order('name');
 
-  const managerIds = (sites ?? []).map((s) => s.manager_id).filter(Boolean) as string[];
+  const managerIds = (sites ?? []).map((s: any) => s.manager_id).filter(Boolean) as string[];
   const { data: managers } =
     managerIds.length > 0
       ? await supabase.from('app_users').select('id, full_name').in('id', managerIds)

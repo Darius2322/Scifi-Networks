@@ -44,7 +44,7 @@ export default async function AdminSiteDetailPage({ params }: { params: { id: st
               <p className="mt-2 text-sm text-ink-800/60">No staff assigned to this site yet.</p>
             ) : (
               <ul className="mt-3 divide-y divide-ink-950/10">
-                {staffAtSite!.map((s) => (
+                {staffAtSite!.map((s: any) => (
                   <li key={s.id} className="py-2 flex items-center justify-between text-sm">
                     <span className="text-ink-950">{s.full_name}</span>
                     <span className="text-ink-800/60 capitalize">{s.role.replace('_', ' ')}</span>

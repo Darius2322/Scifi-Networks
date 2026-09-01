@@ -37,16 +37,16 @@ export async function GET(_req: NextRequest, { params }: { params: { id: string 
     .not('role', 'in', '(agent,customer)')
     .eq('is_active', true);
 
-  const authorIds = [...new Set((updates ?? []).map((u) => u.author_id).filter(Boolean))] as string[];
+  const authorIds = [...new Set((updates ?? []).map((u: any) => u.author_id).filter(Boolean))] as string[];
   let authorNames: Record<string, string> = {};
   if (authorIds.length > 0) {
     const { data: authors } = await supabase.from('app_users').select('id, full_name').in('id', authorIds);
-    authorNames = Object.fromEntries((authors ?? []).map((a) => [a.id, a.full_name]));
+    authorNames = Object.fromEntries((authors ?? []).map((a: any) => [a.id, a.full_name]));
   }
 
   return NextResponse.json({
     ticket,
-    updates: (updates ?? []).map((u) => ({ ...u, author_name: u.author_id ? authorNames[u.author_id] ?? 'Unknown' : 'System' })),
+    updates: (updates ?? []).map((u: any) => ({ ...u, author_name: u.author_id ? authorNames[u.author_id] ?? 'Unknown' : 'System' })),
     eligibleStaff: eligibleStaff ?? [],
   });
 }

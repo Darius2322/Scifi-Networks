@@ -15,7 +15,7 @@ export default async function AdminAuditLogsPage() {
     .order('created_at', { ascending: false })
     .limit(100);
 
-  const actorIds = [...new Set((logs ?? []).map((l) => l.actor_id).filter(Boolean))] as string[];
+  const actorIds = [...new Set((logs ?? []).map((l: any) => l.actor_id).filter(Boolean))] as string[];
   const { data: actors } =
     actorIds.length > 0 ? await supabase.from('app_users').select('id, full_name').in('id', actorIds) : { data: [] };
 

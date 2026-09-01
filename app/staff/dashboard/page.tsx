@@ -20,7 +20,7 @@ export default async function StaffDashboardPage() {
         <div className="mt-5 border border-status-warn/40 bg-status-warn/5 p-4">
           <p className="text-sm font-medium text-status-warn">Active network outages</p>
           <ul className="mt-2 space-y-1 text-sm text-ink-800">
-            {outages.map((o) => (
+            {outages.map((o: any) => (
               <li key={o.id}>{o.title} — {o.status.replace('_', ' ')}</li>
             ))}
           </ul>
@@ -33,7 +33,7 @@ export default async function StaffDashboardPage() {
             <EmptyState text="No pending installations." />
           ) : (
             <ul className="divide-y divide-ink-950/10">
-              {installations.map((i) => {
+              {installations.map((i: any) => {
                 const customer = Array.isArray(i.customers) ? i.customers[0] : i.customers;
                 return (
                   <li key={i.id} className="py-2.5 text-sm">
@@ -51,7 +51,7 @@ export default async function StaffDashboardPage() {
             <EmptyState text="No open tickets." />
           ) : (
             <ul className="divide-y divide-ink-950/10">
-              {openTickets.map((t) => (
+              {openTickets.map((t: any) => (
                 <li key={t.id} className="py-2.5 text-sm">
                   <p className="font-medium text-ink-950">{t.subject}</p>
                   <p className="text-ink-800/60">

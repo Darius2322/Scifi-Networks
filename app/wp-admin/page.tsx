@@ -78,7 +78,7 @@ export default async function AdminOverviewPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-ink-950/10">
-              {recentVouchers.map((v) => (
+              {recentVouchers.map((v: any) => (
                 <tr key={v.id}>
                   <td className="p-3 font-medium text-ink-950">{v.code}</td>
                   <td className="p-3 capitalize">{v.status}</td>

@@ -38,7 +38,7 @@ export default async function StaffTicketsPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-ink-950/10">
-            {(tickets ?? []).map((t) => (
+            {(tickets ?? []).map((t: any) => (
               <tr key={t.id}>
                 <td className="p-3">
                   <Link href={`/staff/tickets/${t.id}`} className="font-medium text-ink-950 hover:text-signal-500">
