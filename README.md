@@ -107,16 +107,18 @@ ticket-based customer tracking, and a foundation for staff/admin portals.
   and writes the audit-trail transaction row together, so concurrent
   updates from two staff members can't corrupt the count.
 
-**Public site fixes**
-- `/status` — dedicated network status page (previously only linked to from
-  nav/footer with no page behind it), showing per-site status and any active
-  incidents pulled from `network_outages`.
-- Favicon and Apple touch icon are now generated (`app/icon.tsx`,
-  `app/apple-icon.tsx`) instead of missing entirely.
-- `public/manifest.json` was referenced in `layout.tsx` metadata but never
-  created — added, so the PWA manifest 404 is gone.
-- The homepage hero now leads with the actual tagline ("A network that
-  everyone is using but you are not.") instead of just the company name.
+**Public site — now complete**
+- `/about`, `/contact` (with a working form → `contact_messages` table),
+  `/faq` (grouped by category, sourced from the database) — all previously
+  missing, now built with proper metadata for each.
+- `app/sitemap.ts` and `app/robots.ts` — dynamic sitemap covering all public
+  routes; robots config explicitly disallows crawling `/track`, `/staff`,
+  `/wp-admin`, and `/api` (no SEO value, and no reason to invite crawlers
+  into anything authenticated).
+- `public/sw.js` — a real service worker with offline fallback (`/offline`)
+  for public pages only. It deliberately never intercepts `/api`, `/staff`,
+  `/wp-admin`, or `/track` — those require a live connection and must not
+  appear to work offline when they can't actually authenticate or fetch data.
 
 **Route protection**
 - `middleware.ts` redirects unauthenticated visitors away from `/staff/*` and
@@ -137,22 +139,18 @@ ticket-based customer tracking, and a foundation for staff/admin portals.
 
 ## What's scaffolded but not yet built out
 
-Every section of the spec now has at least a working foundation. What's left
-is depth rather than missing pieces:
+Every section of the spec now has at least a working foundation, and the
+public site is fully built out. What remains is genuinely secondary:
 
-- **Reports** (`/wp-admin/reports`) currently shows one per-site summary
-  table; the spec's fuller list (filterable by date/staff/category, per spec
-  section 53) would extend this same page.
 - **File uploads** for issue/installation photos (Supabase Storage, private
   bucket, validated MIME/size — RLS placeholders are already in
   `ticket_attachments`).
 - **Equipment tracking** (serial numbers, MAC addresses, assignment history)
   — the `equipment` table and its RLS policies exist in the schema but have
   no UI yet.
-- **SEO** metadata on About/Contact/FAQ pages (data layer for FAQs already
-  exists in `lib/data/public.ts`, but those pages themselves aren't built).
-- **Service worker** for true offline fallback on public pages (the manifest
-  and icons are in place; the worker itself isn't).
+- **Reports** (`/wp-admin/reports`) currently shows one per-site summary
+  table; the spec's fuller filterable version (by date/staff/category, per
+  spec section 53) would extend this same page.
 - **File uploads** for issue/installation photos (Supabase Storage, private
   bucket, validated MIME/size — RLS placeholders are already in
   `ticket_attachments`).

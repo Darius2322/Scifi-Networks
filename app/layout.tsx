@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Fraunces, Inter } from 'next/font/google';
 import './globals.css';
+import { ServiceWorkerRegistration } from '@/components/service-worker-registration';
 
 // Display face: Fraunces — a serif with real texture, used sparingly for
 // headlines only, to avoid the generic geometric-sans-everywhere ISP look.
@@ -39,7 +40,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${display.variable} ${body.variable}`}>
-      <body className="font-body">{children}</body>
+      <body className="font-body">
+        {children}
+        <ServiceWorkerRegistration />
+      </body>
     </html>
   );
 }
