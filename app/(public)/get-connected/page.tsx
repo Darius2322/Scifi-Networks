@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { SiteHeader } from '@/components/marketing/site-header';
 import { SiteFooter } from '@/components/marketing/site-footer';
 import { getActiveSites, getActivePackages } from '@/lib/data/public';
@@ -23,7 +24,9 @@ export default async function GetConnectedPage() {
         </p>
 
         <div className="mt-10">
-          <GetConnectedForm sites={sites} packages={packages} />
+          <Suspense fallback={null}>
+            <GetConnectedForm sites={sites} packages={packages} />
+          </Suspense>
         </div>
       </main>
       <SiteFooter />

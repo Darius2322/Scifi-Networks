@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { StaffLoginForm } from '@/components/staff/staff-login-form';
 
 export const metadata: Metadata = {
@@ -14,7 +15,9 @@ export default function StaffLoginPage() {
         <p className="text-center text-sm text-paper-200/60 mt-1">Staff Portal</p>
 
         <div className="mt-8 bg-paper-50 p-6">
-          <StaffLoginForm />
+          <Suspense fallback={null}>
+            <StaffLoginForm />
+          </Suspense>
         </div>
       </div>
     </div>

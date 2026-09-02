@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { AdminLoginForm } from '@/components/admin/admin-login-form';
 
 export const metadata: Metadata = {
@@ -14,7 +15,9 @@ export default function AdminLoginPage() {
         <p className="text-center text-sm text-paper-200/60 mt-1">Owner / Administrator Access</p>
 
         <div className="mt-8 bg-paper-50 p-6">
-          <AdminLoginForm />
+          <Suspense fallback={null}>
+            <AdminLoginForm />
+          </Suspense>
         </div>
 
         <p className="mt-6 text-center text-xs text-paper-200/40">
