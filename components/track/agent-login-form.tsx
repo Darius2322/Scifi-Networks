@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { PasswordField } from '@/components/ui/password-field';
 import { useRouter } from 'next/navigation';
 
 export function AgentLoginForm() {
@@ -64,23 +65,11 @@ export function AgentLoginForm() {
         />
       </div>
 
-      <div>
-        <label htmlFor="password" className="block text-sm font-medium text-ink-950">
-          Password
-        </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          required
-          autoComplete="current-password"
-          className="mt-1.5 w-full border border-ink-950/15 bg-paper-50 px-3 py-2.5 text-sm focus:border-signal-500"
-        />
-        <p className="mt-1.5 text-xs text-ink-800/50">
-          First time signing in? Your username is what SciFi Networks gave you, and your
-          password is your registered phone number. You'll be asked to change it right away.
-        </p>
-      </div>
+      <PasswordField id="password" name="password" label="Password" autoComplete="current-password" />
+      <p className="mt-1.5 text-xs text-ink-800/50">
+        First time signing in? Your username is what SciFi Networks gave you, and your
+        password is your registered phone number. You'll be asked to change it right away.
+      </p>
 
       <button
         type="submit"

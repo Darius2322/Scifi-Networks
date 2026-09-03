@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { PasswordField } from '@/components/ui/password-field';
 
 export default function ChangePasswordPage() {
   const router = useRouter();
@@ -54,34 +55,8 @@ export default function ChangePasswordPage() {
               {error}
             </p>
           )}
-          <div>
-            <label htmlFor="new_password" className="block text-sm font-medium text-ink-950">
-              New password
-            </label>
-            <input
-              id="new_password"
-              name="new_password"
-              type="password"
-              required
-              minLength={8}
-              autoComplete="new-password"
-              className="mt-1.5 w-full border border-ink-950/15 bg-paper-50 px-3 py-2.5 text-sm focus:border-signal-500"
-            />
-          </div>
-          <div>
-            <label htmlFor="confirm_password" className="block text-sm font-medium text-ink-950">
-              Confirm new password
-            </label>
-            <input
-              id="confirm_password"
-              name="confirm_password"
-              type="password"
-              required
-              minLength={8}
-              autoComplete="new-password"
-              className="mt-1.5 w-full border border-ink-950/15 bg-paper-50 px-3 py-2.5 text-sm focus:border-signal-500"
-            />
-          </div>
+          <PasswordField id="new_password" name="new_password" label="New password" autoComplete="new-password" />
+          <PasswordField id="confirm_password" name="confirm_password" label="Confirm new password" autoComplete="new-password" />
           <button
             type="submit"
             disabled={submitting}

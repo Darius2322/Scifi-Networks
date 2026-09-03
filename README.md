@@ -137,6 +137,55 @@ ticket-based customer tracking, and a foundation for staff/admin portals.
   written through `/api/agents/report-issue`, which re-derives the agent's
   own `site_id`/`agent_id` server-side rather than trusting the request body.
 
+## Round 3 additions (post-launch feature requests)
+
+- **Password show/hide toggles** on every login and change-password form.
+- **Fixed a real bug**: every admin list page (staff, agents, tickets, inventory,
+  packages, sites, vouchers, audit logs, customers, sites/customers detail)
+  was reading through the session-bound Supabase client, making results
+  fragile to JWT claim timing (this is very likely why "staff weren't
+  showing" even though they existed). All switched to the service-role
+  client — the page's own `ADMIN_ROLES` check is still the real gate, this
+  just makes the data fetch itself reliable.
+- **Theme toggle** (light/dark) in the public site header, persisted to
+  `localStorage`. Staff/admin portals intentionally stay light-only for now.
+- **Public "Report an Issue"** (`/report-issue`) — no login, no phone number
+  required, returns a ticket number. Separate from the authenticated
+  `/track/report-issue` flow, rate-limited more tightly since it's fully open.
+- **`/wp-admin/installations`** — view every installation request and assign
+  status/technician inline; customers get a notification on status change.
+- **Richer customer detail** (`/wp-admin/customers/[id]`) — inline edit, pause
+  (suspend) vs. hard delete as two distinct actions, joined date shown, and
+  for agent-customers: their most recent voucher with a one-click resend.
+- **Voucher row actions** — Share (copies the code to clipboard), Resend
+  (re-notifies the agent), Cancel (soft-cancels if unused, deletes if it was
+  never issued as available).
+- **Agent auto-voucher issuance** — admin toggles it on per agent and sets a
+  duration (e.g. 30 days). `ensure_agent_voucher()` (a Postgres function,
+  `db/006_features.sql`) issues a new voucher automatically once the current
+  one expires — checked lazily when the agent's dashboard loads, and
+  proactively once daily via Vercel Cron (`vercel.json` →
+  `/api/cron/issue-vouchers`). Set a `CRON_SECRET` env var to keep that
+  endpoint from being triggered by anyone else.
+- **`/wp-admin/analytics`** — most requested packages, most-used inventory
+  items, and ticket type breakdown, each as a simple bar list.
+- **Hotspot packages** — packages now have a `service_type`
+  (home/business/hotspot); a new public `/hotspot` page shows hotspot-only
+  packages plus an admin-managed requirements list
+  (`/wp-admin/packages` → Hotspot requirements section).
+- **Reviews** — public submission form (rate 1-5, leave a comment) on the
+  homepage; reviews are unpublished by default and need admin approval at
+  `/wp-admin/reviews` before they show publicly.
+- **Success animations** — a shared `.animate-success` fade/scale-in class
+  applied to every "request submitted" / "report received" confirmation state.
+
+**Run `db/006_features.sql` in Supabase before any of this works** — it adds
+the `service_type` column, `hotspot_requirements` and `reviews` tables (with
+RLS), the agent auto-issuance columns, and the `ensure_agent_voucher()`
+function. Also add a `CRON_SECRET` environment variable (any random string)
+and set the same value nowhere else — Vercel Cron sends it automatically
+once configured via `vercel.json`.
+
 ## What's scaffolded but not yet built out
 
 Every section of the spec now has at least a working foundation, and the

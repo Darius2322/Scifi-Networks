@@ -11,6 +11,7 @@ const createPackageSchema = z.object({
   description: z.string().trim().max(500).optional().or(z.literal('')),
   features: z.array(z.string().trim().max(120)).max(20).default([]),
   site_ids: z.array(z.string().uuid()).default([]),
+  service_type: z.enum(['home', 'business', 'hotspot']).default('home'),
 });
 
 export async function GET() {
@@ -47,6 +48,7 @@ export async function POST(req: NextRequest) {
       duration_days: parsed.data.duration_days,
       description: parsed.data.description || null,
       features: parsed.data.features,
+      service_type: parsed.data.service_type,
     })
     .select('id')
     .single();

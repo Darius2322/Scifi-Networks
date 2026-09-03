@@ -1,6 +1,6 @@
 import { redirect, notFound } from 'next/navigation';
 import { getAppUserSession, ADMIN_ROLES } from '@/lib/auth/app-session';
-import { createServerSupabase } from '@/lib/supabase/server';
+import { createServiceRoleClient } from '@/lib/supabase/server';
 import { AdminShell } from '@/components/admin/admin-shell';
 import { SiteEditForm } from '@/components/admin/site-edit-form';
 
@@ -9,7 +9,7 @@ export default async function AdminSiteDetailPage({ params }: { params: { id: st
   if (!session) redirect('/wp-admin/login');
   if (!ADMIN_ROLES.includes(session.role)) redirect('/wp-admin/login');
 
-  const supabase = createServerSupabase();
+  const supabase = createServiceRoleClient();
 
   const [{ data: site }, { data: eligibleManagers }, { data: staffAtSite }, { data: customerCount }, { data: openTickets }] =
     await Promise.all([

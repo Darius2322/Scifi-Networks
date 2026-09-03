@@ -57,6 +57,7 @@ export function AgentManager({ initialAgents, sites }: { initialAgents: Agent[];
 
 function AgentRow({ agent, onChanged }: { agent: Agent; onChanged: () => void }) {
   const [submitting, setSubmitting] = useState(false);
+  const [showVoucherSettings, setShowVoucherSettings] = useState(false);
   const customer = Array.isArray(agent.customers) ? agent.customers[0] : agent.customers;
   const site = Array.isArray(agent.sites) ? agent.sites[0] : agent.sites;
 
@@ -73,23 +74,82 @@ function AgentRow({ agent, onChanged }: { agent: Agent; onChanged: () => void })
   }
 
   return (
-    <tr>
-      <td className="p-3">
-        <p className="font-medium text-ink-950">{customer?.full_name ?? '—'}</p>
-        <p className="text-ink-800/60">{customer?.phone}</p>
-      </td>
-      <td className="p-3 text-ink-800/70">{site?.name ?? '—'}</td>
-      <td className="p-3">
-        <span className={agent.status === 'active' ? 'text-status-good' : 'text-ink-800/50'}>
-          {agent.status}
-        </span>
-      </td>
-      <td className="p-3 text-right">
-        <button onClick={toggleStatus} disabled={submitting} className="text-signal-500 hover:text-signal-600">
-          {agent.status === 'active' ? 'Disable' : 'Reactivate'}
-        </button>
-      </td>
-    </tr>
+    <>
+      <tr>
+        <td className="p-3">
+          <p className="font-medium text-ink-950">{customer?.full_name ?? '—'}</p>
+          <p className="text-ink-800/60">{customer?.phone}</p>
+        </td>
+        <td className="p-3 text-ink-800/70">{site?.name ?? '—'}</td>
+        <td className="p-3">
+          <span className={agent.status === 'active' ? 'text-status-good' : 'text-ink-800/50'}>
+            {agent.status}
+          </span>
+        </td>
+        <td className="p-3 text-right whitespace-nowrap space-x-3">
+          <button onClick={() => setShowVoucherSettings((v) => !v)} className="text-signal-500 hover:text-signal-600">
+            Vouchers
+          </button>
+          <button onClick={toggleStatus} disabled={submitting} className="text-signal-500 hover:text-signal-600">
+            {agent.status === 'active' ? 'Disable' : 'Reactivate'}
+          </button>
+        </td>
+      </tr>
+      {showVoucherSettings && (
+        <tr>
+          <td colSpan={4} className="p-4 bg-paper-100">
+            <AgentVoucherSettings agentId={agent.id} onSaved={onChanged} />
+          </td>
+        </tr>
+      )}
+    </>
+  );
+}
+
+function AgentVoucherSettings({ agentId, onSaved }: { agentId: string; onSaved: () => void }) {
+  const [autoIssue, setAutoIssue] = useState(false);
+  const [duration, setDuration] = useState(30);
+  const [submitting, setSubmitting] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setSubmitting(true);
+    await fetch(`/api/admin/agents/${agentId}/voucher-settings`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ auto_issue_vouchers: autoIssue, voucher_duration_days: duration }),
+    });
+    setSubmitting(false);
+    onSaved();
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="flex flex-wrap items-end gap-4 max-w-xl">
+      <label className="flex items-center gap-2 text-sm text-ink-950">
+        <input type="checkbox" checked={autoIssue} onChange={(e) => setAutoIssue(e.target.checked)} className="h-4 w-4" />
+        Auto-issue vouchers automatically
+      </label>
+      <div>
+        <label className="block text-xs text-ink-800/60">Duration (days)</label>
+        <input
+          type="number"
+          value={duration}
+          onChange={(e) => setDuration(Number(e.target.value))}
+          className="mt-1 w-24 border border-ink-950/15 bg-paper-50 px-2 py-1.5 text-sm"
+        />
+      </div>
+      <button
+        type="submit"
+        disabled={submitting}
+        className="bg-signal-500 text-white px-4 py-2 text-sm font-medium disabled:opacity-60"
+      >
+        {submitting ? 'Saving…' : 'Save'}
+      </button>
+      <p className="w-full text-xs text-ink-800/50">
+        When on, the system automatically keeps this agent supplied with a voucher — a new one is
+        issued as soon as the current one expires, with no admin action needed.
+      </p>
+    </form>
   );
 }
 

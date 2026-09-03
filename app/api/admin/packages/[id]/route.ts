@@ -13,6 +13,7 @@ const updatePackageSchema = z.object({
   is_active: z.boolean().optional(),
   is_archived: z.boolean().optional(),
   site_ids: z.array(z.string().uuid()).optional(),
+  service_type: z.enum(['home', 'business', 'hotspot']).optional(),
 });
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
@@ -39,6 +40,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       ...(fields.features !== undefined && { features: fields.features }),
       ...(fields.is_active !== undefined && { is_active: fields.is_active }),
       ...(fields.is_archived !== undefined && { is_archived: fields.is_archived }),
+      ...(fields.service_type !== undefined && { service_type: fields.service_type }),
     })
     .eq('id', params.id);
 

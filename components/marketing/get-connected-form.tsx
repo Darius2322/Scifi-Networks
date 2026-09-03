@@ -45,7 +45,7 @@ export function GetConnectedForm({ sites, packages }: { sites: Site[]; packages:
 
   if (ticketNumber) {
     return (
-      <div className="border border-status-good/30 bg-status-good/5 p-6">
+      <div className="animate-success border border-status-good/30 bg-status-good/5 p-6">
         <p className="text-sm font-medium text-status-good">Request submitted</p>
         <p className="mt-2 font-display text-2xl font-semibold text-ink-950">{ticketNumber}</p>
         <p className="mt-3 text-sm text-ink-800/80 max-w-prose">

@@ -2,9 +2,11 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const NAV = [
   { href: '/packages', label: 'Packages' },
+  { href: '/hotspot', label: 'Hotspot' },
   { href: '/get-connected', label: 'Get Connected' },
   { href: '/track', label: 'Track Request' },
   { href: '/status', label: 'Network Status' },
@@ -29,14 +31,20 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <Link
-          href="/get-connected"
-          className="hidden md:inline-flex items-center rounded-sm bg-signal-500 px-4 py-2 text-sm font-medium text-white hover:bg-signal-600 transition-colors"
-        >
-          Get Connected
-        </Link>
+        <div className="hidden md:flex items-center gap-3">
+          <ThemeToggle />
+          <Link
+            href="/get-connected"
+            className="inline-flex items-center rounded-sm bg-signal-500 px-4 py-2 text-sm font-medium text-white hover:bg-signal-600 transition-colors"
+          >
+            Get Connected
+          </Link>
+        </div>
 
-        <MobileNav />
+        <div className="md:hidden flex items-center gap-1">
+          <ThemeToggle />
+          <MobileNav />
+        </div>
       </div>
     </header>
   );

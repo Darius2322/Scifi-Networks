@@ -51,7 +51,7 @@ export function ReportIssueForm({ installationId }: { installationId: string }) 
 
   if (ticketNumber) {
     return (
-      <div className="border border-status-good/30 bg-status-good/5 p-6">
+      <div className="animate-success border border-status-good/30 bg-status-good/5 p-6">
         <p className="text-sm font-medium text-status-good">Report received</p>
         <p className="mt-2 font-display text-xl font-semibold text-ink-950">{ticketNumber}</p>
         <p className="mt-2 text-sm text-ink-800/80">We'll update this in your dashboard as it progresses.</p>

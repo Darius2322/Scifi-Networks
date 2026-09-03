@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 import { getAppUserSession, ADMIN_ROLES } from '@/lib/auth/app-session';
-import { createServerSupabase } from '@/lib/supabase/server';
+import { createServiceRoleClient } from '@/lib/supabase/server';
 import { AdminShell } from '@/components/admin/admin-shell';
 import { AgentManager } from '@/components/admin/agent-manager';
 
@@ -9,7 +9,7 @@ export default async function AdminAgentsPage() {
   if (!session) redirect('/wp-admin/login');
   if (!ADMIN_ROLES.includes(session.role)) redirect('/wp-admin/login');
 
-  const supabase = createServerSupabase();
+  const supabase = createServiceRoleClient();
   const [{ data: agents }, { data: sites }] = await Promise.all([
     supabase
       .from('agents')

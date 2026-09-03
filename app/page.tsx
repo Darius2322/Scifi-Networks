@@ -3,10 +3,11 @@ import Image from 'next/image';
 import { SiteHeader } from '@/components/marketing/site-header';
 import { SiteFooter } from '@/components/marketing/site-footer';
 import { StatusStrip } from '@/components/marketing/status-strip';
-import { getActiveSites, getActivePackages } from '@/lib/data/public';
+import { ReviewsSection } from '@/components/marketing/reviews-section';
+import { getActiveSites, getActivePackages, getPublishedReviews } from '@/lib/data/public';
 
 export default async function HomePage() {
-  const [sites, packages] = await Promise.all([getActiveSites(), getActivePackages()]);
+  const [sites, packages, reviews] = await Promise.all([getActiveSites(), getActivePackages(), getPublishedReviews()]);
 
   return (
     <>
@@ -42,6 +43,12 @@ export default async function HomePage() {
                   className="inline-flex items-center rounded-sm border border-ink-950/15 px-5 py-3 text-sm font-medium text-ink-950 hover:border-ink-950/30 transition-colors"
                 >
                   Track My Request
+                </Link>
+                <Link
+                  href="/report-issue"
+                  className="inline-flex items-center px-5 py-3 text-sm font-medium text-status-warn hover:text-status-bad transition-colors"
+                >
+                  Report an Issue
                 </Link>
                 <Link
                   href="/packages"
@@ -150,6 +157,8 @@ export default async function HomePage() {
             </div>
           </div>
         </section>
+
+        <ReviewsSection reviews={reviews} />
       </main>
 
       <SiteFooter />

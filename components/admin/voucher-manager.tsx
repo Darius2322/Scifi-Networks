@@ -34,6 +34,7 @@ export function VoucherManager({ initialVouchers, agents }: { initialVouchers: V
               <th className="p-3 font-medium">Agent</th>
               <th className="p-3 font-medium">Status</th>
               <th className="p-3 font-medium">Issued</th>
+              <th className="p-3 font-medium"></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-ink-950/10">
@@ -49,12 +50,44 @@ export function VoucherManager({ initialVouchers, agents }: { initialVouchers: V
                   <td className="p-3 text-ink-800/70">
                     {new Date(v.issued_at).toLocaleDateString('en-KE', { dateStyle: 'medium' })}
                   </td>
+                  <td className="p-3 text-right whitespace-nowrap space-x-3">
+                    <button
+                      onClick={async () => {
+                        await navigator.clipboard.writeText(v.code);
+                        window.alert('Voucher code copied — share it however you like.');
+                      }}
+                      className="text-signal-500 hover:text-signal-600"
+                    >
+                      Share
+                    </button>
+                    <button
+                      onClick={async () => {
+                        await fetch(`/api/admin/vouchers/${v.id}/resend`, { method: 'POST' });
+                        window.alert('Reminder sent.');
+                      }}
+                      className="text-signal-500 hover:text-signal-600"
+                    >
+                      Resend
+                    </button>
+                    {v.status === 'available' && (
+                      <button
+                        onClick={async () => {
+                          if (!window.confirm('Cancel this voucher?')) return;
+                          await fetch(`/api/admin/vouchers/${v.id}`, { method: 'DELETE' });
+                          location.reload();
+                        }}
+                        className="text-status-bad hover:text-status-bad/80"
+                      >
+                        Cancel
+                      </button>
+                    )}
+                  </td>
                 </tr>
               );
             })}
             {initialVouchers.length === 0 && (
               <tr>
-                <td colSpan={4} className="p-6 text-center text-ink-800/60">
+                <td colSpan={5} className="p-6 text-center text-ink-800/60">
                   No vouchers issued yet.
                 </td>
               </tr>

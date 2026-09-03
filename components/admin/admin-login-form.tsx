@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { PasswordField } from '@/components/ui/password-field';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 export function AdminLoginForm() {
@@ -66,19 +67,7 @@ export function AdminLoginForm() {
         />
       </div>
 
-      <div>
-        <label htmlFor="password" className="block text-sm font-medium text-ink-950">
-          Password
-        </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          required
-          autoComplete="current-password"
-          className="mt-1.5 w-full border border-ink-950/15 bg-paper-50 px-3 py-2.5 text-sm focus:border-signal-500"
-        />
-      </div>
+      <PasswordField id="password" name="password" label="Password" autoComplete="current-password" />
 
       <button
         type="submit"

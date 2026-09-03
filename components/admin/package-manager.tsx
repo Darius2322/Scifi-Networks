@@ -14,6 +14,7 @@ type Package = {
   features: string[];
   is_active: boolean;
   is_archived: boolean;
+  service_type: string;
   package_sites: { site_id: string }[];
 };
 
@@ -159,6 +160,7 @@ function CreatePackageForm({ sites, onCreated }: { sites: Site[]; onCreated: () 
           description: formData.get('description'),
           features: featuresRaw ? featuresRaw.split('\n').map((f) => f.trim()).filter(Boolean) : [],
           site_ids: selectedSites,
+          service_type: formData.get('service_type') || 'home',
         }),
       });
       const json = await res.json();
@@ -183,6 +185,14 @@ function CreatePackageForm({ sites, onCreated }: { sites: Site[]; onCreated: () 
         </p>
       )}
       <TextField label="Name" name="name" required />
+      <div>
+        <label className="block text-sm font-medium text-ink-950">Service type</label>
+        <select name="service_type" defaultValue="home" className="mt-1.5 w-full border border-ink-950/15 bg-paper-50 px-3 py-2 text-sm focus:border-signal-500">
+          <option value="home">Home</option>
+          <option value="business">Business</option>
+          <option value="hotspot">Hotspot</option>
+        </select>
+      </div>
       <div className="grid grid-cols-2 gap-3">
         <TextField label="Speed (Mbps)" name="speed_mbps" type="number" required />
         <TextField label="Price (KES)" name="price_kes" type="number" required />
@@ -229,6 +239,7 @@ function EditPackageForm({ pkg, sites, onSaved, onCancel }: { pkg: Package; site
           features: featuresRaw ? featuresRaw.split('\n').map((f) => f.trim()).filter(Boolean) : [],
           is_active: formData.get('is_active') === 'on',
           site_ids: selectedSites,
+          service_type: formData.get('service_type'),
         }),
       });
       const json = await res.json();
@@ -252,6 +263,14 @@ function EditPackageForm({ pkg, sites, onSaved, onCancel }: { pkg: Package; site
         </p>
       )}
       <TextField label="Name" name="name" defaultValue={pkg.name} required />
+      <div>
+        <label className="block text-sm font-medium text-ink-950">Service type</label>
+        <select name="service_type" defaultValue={pkg.service_type} className="mt-1.5 w-full border border-ink-950/15 bg-paper-50 px-3 py-2 text-sm focus:border-signal-500">
+          <option value="home">Home</option>
+          <option value="business">Business</option>
+          <option value="hotspot">Hotspot</option>
+        </select>
+      </div>
       <div className="grid grid-cols-2 gap-3">
         <TextField label="Speed (Mbps)" name="speed_mbps" type="number" defaultValue={pkg.speed_mbps} required />
         <TextField label="Price (KES)" name="price_kes" type="number" defaultValue={pkg.price_kes} required />

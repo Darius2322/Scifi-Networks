@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/issue-vouchers",
+      "schedule": "0 6 * * *"
+    }
+  ]
+}

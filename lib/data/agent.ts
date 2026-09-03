@@ -6,7 +6,7 @@ export async function getAgentDashboardData(appUserId: string) {
   const { data: agent } = await supabase
     .from('agents')
     .select(`
-      id, physical_location, responsibilities, status, created_at,
+      id, physical_location, responsibilities, status, created_at, auto_issue_vouchers, voucher_duration_days,
       sites ( id, name, network_status ),
       customers ( full_name, phone, email )
     `)
@@ -15,6 +15,12 @@ export async function getAgentDashboardData(appUserId: string) {
 
   if (!agent) {
     return { agent: null, vouchers: [], tickets: [] };
+  }
+
+  // Lazily ensure an auto-issuance agent always has a live voucher waiting,
+  // without requiring the daily cron to have run yet.
+  if (agent.auto_issue_vouchers) {
+    await supabase.rpc('ensure_agent_voucher', { p_agent_id: agent.id });
   }
 
   const [vouchers, tickets] = await Promise.all([

@@ -11,9 +11,12 @@ const NAV = [
   { href: '/wp-admin/agents', label: 'Agents' },
   { href: '/wp-admin/staff', label: 'Staff' },
   { href: '/wp-admin/packages', label: 'Packages' },
+  { href: '/wp-admin/installations', label: 'Installations' },
   { href: '/wp-admin/tickets', label: 'Tickets' },
   { href: '/wp-admin/inventory', label: 'Inventory' },
   { href: '/wp-admin/vouchers', label: 'Vouchers' },
+  { href: '/wp-admin/analytics', label: 'Analytics' },
+  { href: '/wp-admin/reviews', label: 'Reviews' },
   { href: '/wp-admin/reports', label: 'Reports' },
   { href: '/wp-admin/audit-logs', label: 'Audit Logs' },
 ];
