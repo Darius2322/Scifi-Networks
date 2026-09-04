@@ -8,6 +8,7 @@ type Site = {
   name: string;
   description: string | null;
   is_active: boolean;
+  is_main_warehouse: boolean;
   network_status: string;
   manager_id: string | null;
 };
@@ -37,6 +38,7 @@ export function SiteEditForm({ site, eligibleManagers }: { site: Site; eligibleM
           name: formData.get('name'),
           description: formData.get('description'),
           is_active: formData.get('is_active') === 'on',
+          is_main_warehouse: formData.get('is_main_warehouse') === 'on',
           network_status: formData.get('network_status'),
           manager_id: managerId || null,
         }),
@@ -131,6 +133,11 @@ export function SiteEditForm({ site, eligibleManagers }: { site: Site; eligibleM
       <label className="flex items-center gap-2 text-sm text-ink-950">
         <input type="checkbox" name="is_active" defaultChecked={site.is_active} className="h-4 w-4" />
         Site is active
+      </label>
+
+      <label className="flex items-center gap-2 text-sm text-ink-950">
+        <input type="checkbox" name="is_main_warehouse" defaultChecked={site.is_main_warehouse} className="h-4 w-4" />
+        This is the main warehouse (stock is added here first, then transferred out)
       </label>
 
       <button

@@ -35,6 +35,18 @@ export async function getActivePackages(serviceType?: string) {
   return data ?? [];
 }
 
+export async function getSiteSettings() {
+  const supabase = createServerSupabase();
+  const { data } = await supabase
+    .from('settings')
+    .select('key, value')
+    .in('key', ['company_contact', 'social_links', 'terms_and_conditions', 'privacy_policy']);
+
+  const settings: Record<string, any> = {};
+  for (const row of data ?? []) settings[row.key] = row.value;
+  return settings;
+}
+
 export async function getPublishedReviews() {
   const supabase = createServerSupabase();
   const { data, error } = await supabase

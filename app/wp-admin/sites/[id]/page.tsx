@@ -1,4 +1,5 @@
 import { redirect, notFound } from 'next/navigation';
+import Link from 'next/link';
 import { getAppUserSession, ADMIN_ROLES } from '@/lib/auth/app-session';
 import { createServiceRoleClient } from '@/lib/supabase/server';
 import { AdminShell } from '@/components/admin/admin-shell';
@@ -11,7 +12,7 @@ export default async function AdminSiteDetailPage({ params }: { params: { id: st
 
   const supabase = createServiceRoleClient();
 
-  const [{ data: site }, { data: eligibleManagers }, { data: staffAtSite }, { data: customerCount }, { data: openTickets }] =
+  const [{ data: site }, { data: eligibleManagers }, { data: staffAtSite }, { data: customerCount }, { data: openTickets }, { data: inventoryCount }, { data: pendingInstallations }] =
     await Promise.all([
       supabase.from('sites').select('*').eq('id', params.id).single(),
       supabase.from('app_users').select('id, full_name, role').in('role', ['site_manager', 'supervisor']).eq('is_active', true),
@@ -22,20 +23,54 @@ export default async function AdminSiteDetailPage({ params }: { params: { id: st
         .select('id', { count: 'exact', head: true })
         .eq('site_id', params.id)
         .not('status', 'in', '(resolved,completed,cancelled)') as any,
+      supabase.from('inventory_items').select('id', { count: 'exact', head: true }).eq('site_id', params.id) as any,
+      supabase
+        .from('installations')
+        .select('id', { count: 'exact', head: true })
+        .eq('site_id', params.id)
+        .in('status', ['submitted', 'pending_review', 'approved']) as any,
     ]);
 
   if (!site) notFound();
 
   return (
     <AdminShell fullName={session.full_name}>
-      <h1 className="font-display text-2xl font-semibold text-ink-950">{site.name}</h1>
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <h1 className="font-display text-2xl font-semibold text-ink-950">{site.name}</h1>
+          {site.is_main_warehouse && (
+            <span className="mt-1 inline-block text-xs px-2 py-0.5 bg-signal-500/10 text-signal-500 rounded-sm">
+              Main warehouse
+            </span>
+          )}
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Link href={`/wp-admin/customers?site=${site.id}`} className="border border-ink-950/15 px-3 py-2 text-xs font-medium text-ink-950">
+            View customers
+          </Link>
+          <Link href={`/wp-admin/tickets?site_id=${site.id}`} className="border border-ink-950/15 px-3 py-2 text-xs font-medium text-ink-950">
+            View tickets
+          </Link>
+          <Link href={`/wp-admin/inventory`} className="border border-ink-950/15 px-3 py-2 text-xs font-medium text-ink-950">
+            View inventory
+          </Link>
+          <Link href={`/wp-admin/installations`} className="border border-ink-950/15 px-3 py-2 text-xs font-medium text-ink-950">
+            View installations
+          </Link>
+          <Link href={`/wp-admin/staff`} className="bg-signal-500 text-white px-3 py-2 text-xs font-medium">
+            Add staff to this site
+          </Link>
+        </div>
+      </div>
 
       <div className="mt-6 grid lg:grid-cols-[1fr_360px] gap-8">
         <div className="space-y-6">
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
             <StatCard label="Staff at site" value={(staffAtSite ?? []).length} />
             <StatCard label="Customers" value={customerCount?.count ?? 0} />
             <StatCard label="Open tickets" value={openTickets?.count ?? 0} />
+            <StatCard label="Inventory items" value={inventoryCount?.count ?? 0} />
+            <StatCard label="Pending installs" value={pendingInstallations?.count ?? 0} />
           </div>
 
           <div className="border border-ink-950/10 p-5">

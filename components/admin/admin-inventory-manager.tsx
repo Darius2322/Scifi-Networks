@@ -20,6 +20,7 @@ export function AdminInventoryManager({ initialItems, sites }: { initialItems: I
   const router = useRouter();
   const [showAdd, setShowAdd] = useState(false);
   const [filterSite, setFilterSite] = useState('all');
+  const [transferItem, setTransferItem] = useState<Item | null>(null);
 
   const filtered = initialItems.filter((item) => {
     if (filterSite === 'all') return true;
@@ -59,6 +60,20 @@ export function AdminInventoryManager({ initialItems, sites }: { initialItems: I
         </div>
       )}
 
+      {transferItem && (
+        <div className="mb-6 border border-signal-500/30 bg-signal-500/5 p-5 max-w-md">
+          <TransferForm
+            item={transferItem}
+            sites={sites}
+            onDone={() => {
+              setTransferItem(null);
+              router.refresh();
+            }}
+            onCancel={() => setTransferItem(null)}
+          />
+        </div>
+      )}
+
       <div className="border border-ink-950/10">
         <table className="w-full text-sm">
           <thead className="border-b border-ink-950/10 text-left text-ink-800/60">
@@ -67,6 +82,7 @@ export function AdminInventoryManager({ initialItems, sites }: { initialItems: I
               <th className="p-3 font-medium">Site</th>
               <th className="p-3 font-medium">SKU</th>
               <th className="p-3 font-medium">Stock</th>
+              <th className="p-3 font-medium"></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-ink-950/10">
@@ -84,12 +100,17 @@ export function AdminInventoryManager({ initialItems, sites }: { initialItems: I
                     </span>
                     {isLow && <span className="ml-1.5 text-xs text-status-warn">low</span>}
                   </td>
+                  <td className="p-3 text-right">
+                    <button onClick={() => setTransferItem(item)} className="text-signal-500 hover:text-signal-600">
+                      Transfer to site
+                    </button>
+                  </td>
                 </tr>
               );
             })}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={4} className="p-6 text-center text-ink-800/60">
+                <td colSpan={5} className="p-6 text-center text-ink-800/60">
                   No inventory items found.
                 </td>
               </tr>
@@ -99,10 +120,82 @@ export function AdminInventoryManager({ initialItems, sites }: { initialItems: I
       </div>
 
       <p className="mt-3 text-xs text-ink-800/50">
-        Stock movements (issue, transfer, adjust, etc.) are recorded by site staff from the Staff Portal, keeping
-        every change tied to the person and site that made it.
+        Add new stock at your main site, then use "Transfer to site" to move it out to other
+        locations as needed. Every movement is recorded on both ends automatically.
       </p>
     </div>
+  );
+}
+
+function TransferForm({ item, sites, onDone, onCancel }: { item: Item; sites: Site[]; onDone: () => void; onCancel: () => void }) {
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const currentSiteName = Array.isArray(item.sites) ? item.sites[0]?.name : item.sites?.name;
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setSubmitting(true);
+    setError(null);
+    const formData = new FormData(e.currentTarget);
+
+    try {
+      const res = await fetch('/api/admin/inventory/transfer', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          source_item_id: item.id,
+          destination_site_id: formData.get('destination_site_id'),
+          quantity: formData.get('quantity'),
+          notes: formData.get('notes'),
+        }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setError(json.error ?? 'Could not complete the transfer.');
+        return;
+      }
+      onDone();
+    } catch {
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-3" noValidate>
+      <h3 className="text-sm font-medium text-ink-950">
+        Transfer "{item.name}" from {currentSiteName}
+      </h3>
+      {error && <p className="text-xs text-status-bad">{error}</p>}
+      <select name="destination_site_id" required className="w-full border border-ink-950/15 bg-paper-50 px-3 py-2 text-sm">
+        <option value="">Send to site…</option>
+        {sites.filter((s) => s.name !== currentSiteName).map((s) => (
+          <option key={s.id} value={s.id}>
+            {s.name}
+          </option>
+        ))}
+      </select>
+      <input
+        name="quantity"
+        type="number"
+        step="0.01"
+        min="0.01"
+        max={item.current_stock}
+        required
+        placeholder={`Quantity (max ${item.current_stock} ${item.unit})`}
+        className="w-full border border-ink-950/15 bg-paper-50 px-3 py-2 text-sm"
+      />
+      <input name="notes" placeholder="Notes (optional)" className="w-full border border-ink-950/15 bg-paper-50 px-3 py-2 text-sm" />
+      <div className="flex gap-2">
+        <button type="submit" disabled={submitting} className="bg-signal-500 text-white px-4 py-2 text-sm font-medium disabled:opacity-60">
+          {submitting ? 'Transferring…' : 'Confirm transfer'}
+        </button>
+        <button type="button" onClick={onCancel} className="border border-ink-950/15 px-4 py-2 text-sm font-medium text-ink-950">
+          Cancel
+        </button>
+      </div>
+    </form>
   );
 }
 

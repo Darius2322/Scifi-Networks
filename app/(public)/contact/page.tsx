@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { SiteHeader } from '@/components/marketing/site-header';
 import { SiteFooter } from '@/components/marketing/site-footer';
-import { getActiveSites } from '@/lib/data/public';
+import { getActiveSites, getSiteSettings } from '@/lib/data/public';
 import { ContactForm } from '@/components/marketing/contact-form';
 
 export const metadata: Metadata = {
@@ -10,7 +10,11 @@ export const metadata: Metadata = {
 };
 
 export default async function ContactPage() {
-  const sites = await getActiveSites();
+  const [sites, settings] = await Promise.all([getActiveSites(), getSiteSettings()]);
+  const contact = settings.company_contact ?? {};
+  const phone = contact.phone || '+254700000000';
+  const whatsapp = contact.whatsapp || phone;
+  const email = contact.email || 'support@scifinetworks.example';
 
   return (
     <>
@@ -26,9 +30,9 @@ export default async function ContactPage() {
             <div>
               <h2 className="text-sm font-medium text-ink-800/60 uppercase tracking-wide">Get in touch</h2>
               <div className="mt-3 space-y-2 text-ink-950">
-                <p>Phone: <a href="tel:+254700000000" className="text-signal-500 hover:text-signal-600">+254 700 000 000</a></p>
-                <p>WhatsApp: <a href="https://wa.me/254700000000" className="text-signal-500 hover:text-signal-600">+254 700 000 000</a></p>
-                <p>Email: <a href="mailto:support@scifinetworks.example" className="text-signal-500 hover:text-signal-600">support@scifinetworks.example</a></p>
+                <p>Phone: <a href={`tel:${phone}`} className="text-signal-500 hover:text-signal-600">{phone}</a></p>
+                <p>WhatsApp: <a href={`https://wa.me/${whatsapp.replace(/\D/g, '')}`} className="text-signal-500 hover:text-signal-600">{whatsapp}</a></p>
+                <p>Email: <a href={`mailto:${email}`} className="text-signal-500 hover:text-signal-600">{email}</a></p>
               </div>
             </div>
 

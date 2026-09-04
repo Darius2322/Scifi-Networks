@@ -225,6 +225,45 @@ fresh tab or bookmark), but worth knowing about if a staff dashboard looks
 unexpectedly inverted — a page refresh will not fix it since the attribute
 persists in memory; logging out and back in, or opening a fresh tab, will.
 
+## Round 5 additions
+
+- **Fixed a real image bug**: the homepage hero photo (and any future
+  Unsplash images) was silently blocked because `next.config.js` only
+  allowed `*.supabase.co` in `images.remotePatterns` — Next.js refuses to
+  render external images from domains not explicitly listed. Added
+  `images.unsplash.com`. This is very likely why the hero showed a gray box
+  instead of a photo.
+- **Custom 404 page** (`app/not-found.tsx`), styled consistently with the site.
+- **Admin sidebar is now a proper mobile drawer**, not nav dumped inline
+  above the page content — Staff and every other section stay reachable
+  from a hamburger toggle on any screen size, and the drawer closes
+  automatically after navigating.
+- **Global admin search** — a search bar in the admin header queries
+  customers, tickets, staff, inventory, vouchers, and sites at once, with
+  results linking straight to the right page.
+- **Site detail quick actions** — clicking into a site (e.g. Nyanchwa) now
+  shows View Customers / Tickets / Inventory / Installations buttons plus
+  "Add staff to this site", alongside expanded stats (inventory item count,
+  pending installations).
+- **Main warehouse inventory model**: a site can be flagged "main warehouse"
+  (toggle in Site Settings). Stock gets added there first, then moved to
+  other sites via a new "Transfer to site" action on each inventory row.
+  `transfer_inventory_stock()` (`db/007_inventory_transfer.sql`) moves stock
+  atomically — deducting from source and crediting the destination (creating
+  the destination item by matching SKU if it doesn't exist yet) — with a
+  transaction record written on both ends.
+- **Settings page** (`/wp-admin/settings`) — company contact info (phone/
+  email/WhatsApp), social media links, Terms & Conditions, and Privacy
+  Policy, all editable from the admin and reflected live on the public site:
+  Contact page now shows the real numbers/email instead of placeholders, the
+  footer shows real social icons when configured, and there's a new public
+  `/terms` page.
+- **Share button** in the footer — uses the native share sheet on mobile,
+  falls back to copying the link on desktop.
+
+Run `db/007_inventory_transfer.sql` in Supabase before using the warehouse
+transfer feature.
+
 ## What's scaffolded but not yet built out
 
 Every section of the spec now has at least a working foundation, and the

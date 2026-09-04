@@ -7,6 +7,7 @@ const updateSiteSchema = z.object({
   name: z.string().trim().min(2).max(80).optional(),
   description: z.string().trim().max(500).optional().or(z.literal('')),
   is_active: z.boolean().optional(),
+  is_main_warehouse: z.boolean().optional(),
   network_status: z.enum(['operational', 'partial_outage', 'major_outage', 'maintenance']).optional(),
   manager_id: z.string().uuid().nullable().optional(),
 });
@@ -43,6 +44,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       ...(parsed.data.name !== undefined && { name: parsed.data.name }),
       ...(parsed.data.description !== undefined && { description: parsed.data.description || null }),
       ...(parsed.data.is_active !== undefined && { is_active: parsed.data.is_active }),
+      ...(parsed.data.is_main_warehouse !== undefined && { is_main_warehouse: parsed.data.is_main_warehouse }),
       ...(parsed.data.network_status !== undefined && { network_status: parsed.data.network_status }),
       ...(parsed.data.manager_id !== undefined && { manager_id: parsed.data.manager_id }),
     })
