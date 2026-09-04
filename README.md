@@ -186,6 +186,45 @@ function. Also add a `CRON_SECRET` environment variable (any random string)
 and set the same value nowhere else — Vercel Cron sends it automatically
 once configured via `vercel.json`.
 
+## Round 4: design system overhaul
+
+- **New color palette** — Deep Navy + Teal, implemented as CSS custom
+  properties (`app/globals.css`) that Tailwind's color tokens read from
+  (`tailwind.config.ts`). This means `text-ink-950`, `bg-paper-50`,
+  `bg-signal-500`, `text-status-good`, etc. automatically resolve to the
+  correct light or dark value everywhere in the app — no per-component
+  color edits were needed. Light: navy text (#0F172A) on off-white
+  (#F8FAFC), teal primary (#0F766E). Dark: near-white text on near-black
+  navy (#0B1120), bright teal/cyan primary (#2DD4BF).
+- **Fonts** — Manrope (600/700) for headings, Inter for everything else
+  (body, forms, dashboards, prices), replacing the earlier serif display face.
+- **Fixed the hamburger menu bug**: the icon and logo mark had hardcoded hex
+  colors (`stroke="#0B1220"`) instead of theme classes, which meant in dark
+  mode the icon rendered a dark color on a dark background — effectively
+  invisible even though the menu was technically opening. Both now use
+  theme-aware `stroke-ink-950` / `fill-signal-500` classes.
+- **Admin sidebar** — regrouped into sections (Dashboard, Operations,
+  Business, People, System) matching the standard ISP-admin layout pattern,
+  and the sidebar nav and main content area now scroll **independently** —
+  a long content page never drags the nav out of view, and vice versa. This
+  layout is desktop-only by design; on mobile it falls back to normal
+  stacked scrolling so the sidebar can't push content off-screen.
+- **Hotspot CTAs** — a "Request Hotspot Service" primary button now sits at
+  the top of `/hotspot`, alongside "Report an Issue"; each package button
+  reads "Request This Plan" instead of "Get This Plan" for clarity.
+- **Report an Issue** styled as a proper bordered button on the homepage
+  hero, matching the visual weight of Get Connected / Track My Request.
+
+**Known limitation**: the dark-mode toggle sets `data-theme` on `<html>`,
+which is a document-level attribute. If a person toggles dark mode on the
+public site and then navigates to `/staff` or `/wp-admin` in the *same
+browser tab* without a full page reload, the dark values would apply there
+too, even though those portals were designed against the light palette only.
+In practice this is a narrow edge case (most people reach staff/admin via a
+fresh tab or bookmark), but worth knowing about if a staff dashboard looks
+unexpectedly inverted — a page refresh will not fix it since the attribute
+persists in memory; logging out and back in, or opening a fresh tab, will.
+
 ## What's scaffolded but not yet built out
 
 Every section of the spec now has at least a working foundation, and the

@@ -17,32 +17,58 @@
     }
   }
 
+  /* ==========================================================================
+     Color system — Deep Navy + Teal, per spec. Defined as CSS variables so
+     every Tailwind class built on them (text-ink-950, bg-paper-50,
+     bg-signal-500, text-status-good, etc.) automatically gets the right
+     value in both themes with zero changes needed in individual components.
+     ========================================================================== */
+  :root {
+    --color-ink-950: 15 23 42;      /* #0F172A — headings/primary text (light) */
+    --color-ink-900: 22 78 99;      /* #164E63 — secondary / links (light) */
+    --color-ink-800: 71 85 105;     /* #475569 — body text (light) */
+    --color-ink-700: 100 116 139;   /* #64748B — muted text (light) */
+
+    --color-paper-50: 248 250 252;  /* #F8FAFC — page background (light) */
+    --color-paper-100: 255 255 255; /* #FFFFFF — surface/card (light) */
+    --color-paper-200: 226 232 240; /* #E2E8F0 — border (light) */
+
+    --color-signal-400: 22 78 99;   /* #164E63 — link accent (light) */
+    --color-signal-500: 15 118 110; /* #0F766E — primary brand (light) */
+    --color-signal-600: 17 94 89;   /* #115E59 — hover (light) */
+
+    --color-status-good: 22 163 74; /* #16A34A */
+    --color-status-warn: 217 119 6; /* #D97706 */
+    --color-status-bad: 220 38 38;  /* #DC2626 */
+  }
+
+  [data-theme='dark'] {
+    --color-ink-950: 248 250 252;   /* #F8FAFC — headings on dark bg */
+    --color-ink-900: 34 211 238;    /* #22D3EE — secondary / links (dark) */
+    --color-ink-800: 203 213 225;   /* #CBD5E1 — body text (dark) */
+    --color-ink-700: 148 163 184;   /* #94A3B8 — muted text (dark) */
+
+    --color-paper-50: 11 17 32;     /* #0B1120 — page background (dark) */
+    --color-paper-100: 17 24 39;    /* #111827 — surface/card (dark) */
+    --color-paper-200: 30 41 59;    /* #1E293B — border (dark) */
+
+    --color-signal-400: 34 211 238; /* #22D3EE — link accent (dark) */
+    --color-signal-500: 45 212 191; /* #2DD4BF — primary brand (dark) */
+    --color-signal-600: 94 234 212; /* #5EEAD4 — hover (dark) */
+
+    --color-status-good: 74 222 128;  /* #4ADE80 */
+    --color-status-warn: 251 191 36;  /* #FBBF24 */
+    --color-status-bad: 248 113 113;  /* #F87171 */
+  }
+
   body {
     @apply bg-paper-50 text-ink-950 antialiased;
   }
 
   :focus-visible {
-    outline: 2px solid #1E6FE0;
+    outline: 2px solid rgb(var(--color-signal-500));
     outline-offset: 2px;
   }
-
-  /* Dark theme — toggled via [data-theme="dark"] on <html>, persisted in
-     localStorage by ThemeToggle. Public site only; staff/admin portals
-     stay on the light palette for now since legibility matters more than
-     preference there. */
-  [data-theme='dark'] {
-    --tw-bg-paper-50: #10151F;
-  }
-  [data-theme='dark'] body {
-    background-color: #10151F;
-    color: #EDEFF3;
-  }
-  [data-theme='dark'] .bg-paper-50 { background-color: #10151F !important; }
-  [data-theme='dark'] .bg-paper-100 { background-color: #171D2A !important; }
-  [data-theme='dark'] .text-ink-950 { color: #EDEFF3 !important; }
-  [data-theme='dark'] .text-ink-800 { color: #C3C9D4 !important; }
-  [data-theme='dark'] .border-ink-950\/10 { border-color: rgba(237,239,243,0.12) !important; }
-  [data-theme='dark'] .border-ink-950\/15 { border-color: rgba(237,239,243,0.18) !important; }
 }
 
 @layer components {

@@ -8,6 +8,7 @@ const NAV = [
   { href: '/packages', label: 'Packages' },
   { href: '/hotspot', label: 'Hotspot' },
   { href: '/get-connected', label: 'Get Connected' },
+  { href: '/report-issue', label: 'Report an Issue' },
   { href: '/track', label: 'Track Request' },
   { href: '/status', label: 'Network Status' },
   { href: '/about', label: 'About' },
@@ -53,9 +54,9 @@ export function SiteHeader() {
 function LogoMark() {
   return (
     <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
-      <circle cx="13" cy="20" r="1.8" fill="#1E6FE0" />
-      <path d="M8 15.5C10.5 13 15.5 13 18 15.5" stroke="#1E6FE0" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M4.5 11.5C9.5 6.8 16.5 6.8 21.5 11.5" stroke="#0B1220" strokeWidth="1.8" strokeLinecap="round" />
+      <circle cx="13" cy="20" r="1.8" className="fill-signal-500" />
+      <path d="M8 15.5C10.5 13 15.5 13 18 15.5" className="stroke-signal-500" strokeWidth="1.8" strokeLinecap="round" />
+      <path d="M4.5 11.5C9.5 6.8 16.5 6.8 21.5 11.5" className="stroke-ink-950" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
@@ -93,12 +94,12 @@ function MobileNav() {
         className="p-2 -mr-2"
       >
         {open ? (
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M6 6l12 12M18 6L6 18" stroke="#0B1220" strokeWidth="1.8" strokeLinecap="round" />
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="stroke-ink-950">
+            <path d="M6 6l12 12M18 6L6 18" strokeWidth="1.8" strokeLinecap="round" />
           </svg>
         ) : (
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M4 6h16M4 12h16M4 18h16" stroke="#0B1220" strokeWidth="1.8" strokeLinecap="round" />
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="stroke-ink-950">
+            <path d="M4 6h16M4 12h16M4 18h16" strokeWidth="1.8" strokeLinecap="round" />
           </svg>
         )}
       </button>

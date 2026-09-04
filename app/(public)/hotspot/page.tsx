@@ -27,6 +27,21 @@ export default async function HotspotPage() {
           events, or as a backup connection.
         </p>
 
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Link
+            href="/get-connected"
+            className="inline-flex items-center rounded-sm bg-signal-500 px-5 py-3 text-sm font-medium text-white hover:bg-signal-600 transition-colors"
+          >
+            Request Hotspot Service
+          </Link>
+          <Link
+            href="/report-issue"
+            className="inline-flex items-center rounded-sm border border-ink-950/15 px-5 py-3 text-sm font-medium text-ink-950 hover:border-ink-950/30 transition-colors"
+          >
+            Report an Issue
+          </Link>
+        </div>
+
         {requirements.length > 0 && (
           <div className="mt-8 border border-ink-950/10 p-6 max-w-2xl">
             <h2 className="font-medium text-ink-950">What you'll need</h2>
@@ -63,7 +78,7 @@ export default async function HotspotPage() {
                   href={`/get-connected?package=${pkg.id}`}
                   className="mt-6 inline-flex items-center justify-center rounded-sm bg-signal-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-signal-600 transition-colors"
                 >
-                  Get This Plan
+                  Request This Plan
                 </Link>
               </div>
             ))}

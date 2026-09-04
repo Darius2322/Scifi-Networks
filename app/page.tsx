@@ -46,7 +46,7 @@ export default async function HomePage() {
                 </Link>
                 <Link
                   href="/report-issue"
-                  className="inline-flex items-center px-5 py-3 text-sm font-medium text-status-warn hover:text-status-bad transition-colors"
+                  className="inline-flex items-center rounded-sm border border-status-warn/40 px-5 py-3 text-sm font-medium text-status-warn hover:bg-status-warn/5 transition-colors"
                 >
                   Report an Issue
                 </Link>

@@ -1,20 +1,21 @@
 import type { Metadata, Viewport } from 'next';
-import { Fraunces, Inter } from 'next/font/google';
+import { Manrope, Inter } from 'next/font/google';
 import './globals.css';
 import { ServiceWorkerRegistration } from '@/components/service-worker-registration';
 
-// Display face: Fraunces — a serif with real texture, used sparingly for
-// headlines only, to avoid the generic geometric-sans-everywhere ISP look.
-const display = Fraunces({
+// Per design spec: Manrope for headings (a little personality), Inter for
+// everything else (body, forms, dashboards, numbers) — stays highly
+// readable across phones, tablets, and desktops in both themes.
+const display = Manrope({
   subsets: ['latin'],
-  weight: ['500', '600'],
+  weight: ['600', '700'],
   variable: '--font-display',
   display: 'swap',
 });
 
 const body = Inter({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
+  weight: ['400', '500', '600', '700'],
   variable: '--font-body',
   display: 'swap',
 });
@@ -37,7 +38,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#0B1220',
+  themeColor: '#0F172A',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -1,38 +1,39 @@
 import type { Config } from 'tailwindcss';
 
-// Design tokens — professional ISP identity, not a generic SaaS palette.
-// Base: deep navy/charcoal + warm neutral paper + a single signal-blue accent
-// borrowed from fiber-optic light, used sparingly (links, active states, CTAs).
+// Design tokens — Deep Navy + Teal, defined as CSS variables (see
+// app/globals.css) so every class here automatically swaps between light
+// and dark theme values with zero per-component changes.
 const config: Config = {
   content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'],
   theme: {
     extend: {
       colors: {
         ink: {
-          950: '#0B1220', // near-black navy, headers/hero backgrounds
-          900: '#111A2E',
-          800: '#1B263F',
-          700: '#2A3B5C',
+          950: 'rgb(var(--color-ink-950) / <alpha-value>)', // headings/primary text
+          900: 'rgb(var(--color-ink-900) / <alpha-value>)', // secondary / links
+          800: 'rgb(var(--color-ink-800) / <alpha-value>)', // body text
+          700: 'rgb(var(--color-ink-700) / <alpha-value>)', // muted text
+          100: 'rgb(var(--color-paper-200) / <alpha-value>)', // light neutral fill (placeholders etc.)
         },
         paper: {
-          50: '#F7F7F5',  // warm off-white, main background
-          100: '#EFEFEA',
-          200: '#E2E1DA',
+          50: 'rgb(var(--color-paper-50) / <alpha-value>)',   // page background
+          100: 'rgb(var(--color-paper-100) / <alpha-value>)', // surface / card
+          200: 'rgb(var(--color-paper-200) / <alpha-value>)', // border
         },
         signal: {
-          500: '#1E6FE0', // fiber-blue accent — CTAs, links, active nav
-          600: '#1859B8',
-          400: '#4C8EEF',
+          400: 'rgb(var(--color-signal-400) / <alpha-value>)', // link accent
+          500: 'rgb(var(--color-signal-500) / <alpha-value>)', // primary brand
+          600: 'rgb(var(--color-signal-600) / <alpha-value>)', // hover
         },
         status: {
-          good: '#1E8E5A',
-          warn: '#B5760B',
-          bad: '#C6363B',
+          good: 'rgb(var(--color-status-good) / <alpha-value>)',
+          warn: 'rgb(var(--color-status-warn) / <alpha-value>)',
+          bad: 'rgb(var(--color-status-bad) / <alpha-value>)',
         },
       },
       fontFamily: {
-        display: ['var(--font-display)', 'system-ui', 'sans-serif'],
-        body: ['var(--font-body)', 'system-ui', 'sans-serif'],
+        display: ['var(--font-display)', 'system-ui', 'sans-serif'], // Manrope
+        body: ['var(--font-body)', 'system-ui', 'sans-serif'],       // Inter
       },
       maxWidth: {
         prose: '68ch',
