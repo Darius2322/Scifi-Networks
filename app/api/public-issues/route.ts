@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
       reporter_contact: parsed.data.reporter_contact || null,
       status: 'submitted',
     })
-    .select('ticket_number')
+    .select('id, ticket_number')
     .single();
 
   if (error || !ticket) {
@@ -72,6 +72,10 @@ export async function POST(req: NextRequest) {
     site_id: parsed.data.site_id,
     metadata: { ticket_number: ticket.ticket_number, source: 'public_report_issue', type: parsed.data.type },
   });
+
+  // Location-based auto-routing: find the active agent assigned to this
+  // site and hand them the ticket. Never hardcoded — always a live lookup.
+  await supabase.rpc('route_ticket_to_agent', { p_ticket_id: ticket.id });
 
   return NextResponse.json({ ticket_number: ticket.ticket_number }, { status: 201 });
 }

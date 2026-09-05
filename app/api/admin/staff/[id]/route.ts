@@ -4,7 +4,7 @@ import { createServiceRoleClient } from '@/lib/supabase/server';
 import { requireAdmin, logAudit } from '@/lib/auth/admin-guard';
 
 const updateStaffSchema = z.object({
-  role: z.enum(['site_manager', 'supervisor', 'technician', 'support_staff', 'inventory_staff']).optional(),
+  role: z.enum(['site_manager', 'supervisor', 'technician', 'support_staff', 'inventory_staff', 'customer_care']).optional(),
   site_id: z.string().uuid().optional(),
   is_active: z.boolean().optional(),
 });

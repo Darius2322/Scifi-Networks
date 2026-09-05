@@ -12,6 +12,7 @@ export function GlobalSearch() {
   const [open, setOpen] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
   const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -19,6 +20,18 @@ export function GlobalSearch() {
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Cmd+K / Ctrl+K focuses the search from anywhere in the admin.
+  useEffect(() => {
+    function handleShortcut(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    }
+    document.addEventListener('keydown', handleShortcut);
+    return () => document.removeEventListener('keydown', handleShortcut);
   }, []);
 
   useEffect(() => {
@@ -39,10 +52,11 @@ export function GlobalSearch() {
   return (
     <div ref={containerRef} className="relative max-w-md">
       <input
+        ref={inputRef}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onFocus={() => results.length > 0 && setOpen(true)}
-        placeholder="Search customers, tickets, staff, inventory…"
+        placeholder="Search…  (⌘K)"
         className="w-full border border-ink-950/15 bg-paper-50 px-3 py-1.5 text-sm focus:border-signal-500"
       />
       {open && results.length > 0 && (

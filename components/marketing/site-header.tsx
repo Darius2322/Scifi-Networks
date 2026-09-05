@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const NAV = [
@@ -17,7 +17,7 @@ const NAV = [
 
 export function SiteHeader() {
   return (
-    <header className="border-b border-ink-950/10 bg-paper-50/95 backdrop-blur supports-[backdrop-filter]:bg-paper-50/80 sticky top-0 z-40">
+    <header className="border-b border-ink-950/10 bg-paper-50 sticky top-0 z-40">
       <div className="container-page flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-display text-lg font-semibold text-ink-950">
           <LogoMark />
@@ -63,19 +63,23 @@ function LogoMark() {
 
 function MobileNav() {
   const [open, setOpen] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const firstLinkRef = useRef<HTMLAnchorElement>(null);
 
-  // Prevent background scroll while the menu is open (spec section 50).
+  // Prevent background scroll while the menu is open.
   useEffect(() => {
     if (open) {
       const original = document.body.style.overflow;
       document.body.style.overflow = 'hidden';
+      // Move focus into the menu once it's open, for keyboard/screen-reader users.
+      firstLinkRef.current?.focus();
       return () => {
         document.body.style.overflow = original;
       };
     }
   }, [open]);
 
-  // Close on route change / escape for good measure.
+  // Escape closes the menu.
   useEffect(() => {
     function handleKey(e: KeyboardEvent) {
       if (e.key === 'Escape') setOpen(false);
@@ -105,26 +109,41 @@ function MobileNav() {
       </button>
 
       {open && (
-        <div className="fixed inset-x-0 top-16 bottom-0 bg-paper-50 border-t border-ink-950/10 p-5 overflow-y-auto z-50">
-          <nav className="flex flex-col gap-1">
-            {NAV.map((item) => (
+        // Full-viewport overlay. Deliberately NOT nested inside any element
+        // that applies backdrop-filter/filter/transform — those create a new
+        // CSS containing block for `fixed` descendants, which is exactly
+        // what broke this menu previously (it rendered, but collapsed to
+        // the header's own 64px height instead of the full screen).
+        <div
+          className="fixed inset-0 z-50 bg-black/30 animate-success"
+          onClick={() => setOpen(false)}
+        >
+          <div
+            ref={panelRef}
+            onClick={(e) => e.stopPropagation()}
+            className="absolute inset-x-0 top-0 bg-paper-50 border-b border-ink-950/10 p-5 pt-20 max-h-screen overflow-y-auto"
+          >
+            <nav className="flex flex-col gap-1">
+              {NAV.map((item, i) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  ref={i === 0 ? firstLinkRef : undefined}
+                  onClick={() => setOpen(false)}
+                  className="py-3 text-base font-medium text-ink-950 border-b border-ink-950/5"
+                >
+                  {item.label}
+                </Link>
+              ))}
               <Link
-                key={item.href}
-                href={item.href}
+                href="/get-connected"
                 onClick={() => setOpen(false)}
-                className="py-3 text-base font-medium text-ink-950 border-b border-ink-950/5"
+                className="mt-4 inline-flex items-center justify-center rounded-sm bg-signal-500 px-4 py-3 text-sm font-medium text-white"
               >
-                {item.label}
+                Get Connected
               </Link>
-            ))}
-            <Link
-              href="/get-connected"
-              onClick={() => setOpen(false)}
-              className="mt-4 inline-flex items-center justify-center rounded-sm bg-signal-500 px-4 py-3 text-sm font-medium text-white"
-            >
-              Get Connected
-            </Link>
-          </nav>
+            </nav>
+          </div>
         </div>
       )}
     </div>

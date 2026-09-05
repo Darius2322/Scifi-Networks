@@ -4,7 +4,7 @@ import { staffLoginSchema } from '@/lib/validation';
 import { isLoginRateLimited } from '@/lib/auth/rate-limit';
 import { resolveLoginIdentifier, recordFailedLogin, recordSuccessfulLogin } from '@/lib/auth/login-resolver';
 
-const STAFF_ROLES = ['owner', 'admin', 'site_manager', 'supervisor', 'technician', 'support_staff', 'inventory_staff'];
+const STAFF_ROLES = ['owner', 'admin', 'site_manager', 'supervisor', 'technician', 'support_staff', 'inventory_staff', 'customer_care'];
 
 const LOCKOUT_MESSAGE = 'Too many failed attempts. This account is temporarily locked. Try again later.';
 const GENERIC_MESSAGE = 'Invalid username/email or password.';

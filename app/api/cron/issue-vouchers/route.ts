@@ -27,5 +27,7 @@ export async function GET(req: Request) {
     if (data) issued += 1;
   }
 
-  return NextResponse.json({ checked: agents?.length ?? 0, issued });
+  const { data: releasedCount } = await supabase.rpc('release_expired_voucher_reservations');
+
+  return NextResponse.json({ checked: agents?.length ?? 0, issued, releasedReservations: releasedCount ?? 0 });
 }

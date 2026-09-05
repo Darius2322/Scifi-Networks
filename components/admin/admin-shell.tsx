@@ -26,6 +26,7 @@ const NAV_GROUPS = [
       { href: '/wp-admin/sites', label: 'Sites' },
       { href: '/wp-admin/packages', label: 'Packages' },
       { href: '/wp-admin/vouchers', label: 'Vouchers' },
+      { href: '/wp-admin/maintenance', label: 'Maintenance' },
       { href: '/wp-admin/reviews', label: 'Reviews' },
       { href: '/wp-admin/reports', label: 'Reports' },
       { href: '/wp-admin/analytics', label: 'Analytics' },

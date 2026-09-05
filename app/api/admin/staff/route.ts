@@ -4,7 +4,7 @@ import { createServiceRoleClient } from '@/lib/supabase/server';
 import { requireAdmin, logAudit } from '@/lib/auth/admin-guard';
 import { provisionAppUser } from '@/lib/auth/provision-user';
 
-const STAFF_ROLES = ['site_manager', 'supervisor', 'technician', 'support_staff', 'inventory_staff'] as const;
+const STAFF_ROLES = ['site_manager', 'supervisor', 'technician', 'support_staff', 'inventory_staff', 'customer_care'] as const;
 
 const createStaffSchema = z.object({
   full_name: z.string().trim().min(2).max(120),

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { SiteHeader } from '@/components/marketing/site-header';
 import { SiteFooter } from '@/components/marketing/site-footer';
-import { getActiveSites, getActiveOutagesBySite } from '@/lib/data/public';
+import { getActiveSites, getActiveOutagesBySite, getActiveMaintenanceNotices } from '@/lib/data/public';
 
 export const metadata: Metadata = {
   title: 'Network Status',
@@ -25,7 +25,11 @@ const STATUS_STYLE: Record<string, string> = {
 };
 
 export default async function StatusPage() {
-  const [sites, outages] = await Promise.all([getActiveSites(), getActiveOutagesBySite()]);
+  const [sites, outages, maintenanceNotices] = await Promise.all([
+    getActiveSites(),
+    getActiveOutagesBySite(),
+    getActiveMaintenanceNotices(),
+  ]);
 
   return (
     <>
@@ -50,6 +54,34 @@ export default async function StatusPage() {
             ))
           )}
         </div>
+
+        {maintenanceNotices.length > 0 && (
+          <div className="mt-10">
+            <h2 className="font-display text-xl font-semibold text-ink-950">Scheduled maintenance</h2>
+            <div className="mt-4 space-y-4">
+              {maintenanceNotices.map((notice: any) => {
+                const site = Array.isArray(notice.sites) ? notice.sites[0] : notice.sites;
+                return (
+                  <div key={notice.id} className="border border-signal-500/30 bg-signal-500/5 p-5">
+                    <div className="flex items-center justify-between">
+                      <p className="font-medium text-ink-950">{notice.title}</p>
+                      <span className="text-xs uppercase tracking-wide text-signal-500">{notice.status.replace('_', ' ')}</span>
+                    </div>
+                    <p className="mt-1.5 text-sm text-ink-800/70">
+                      {site?.name ?? 'All sites'}
+                      {notice.affected_service && ` · ${notice.affected_service}`}
+                    </p>
+                    {notice.description && <p className="mt-2 text-sm text-ink-800/80">{notice.description}</p>}
+                    <p className="mt-2 text-sm text-ink-800/60">
+                      Starts {new Date(notice.starts_at).toLocaleString('en-KE', { dateStyle: 'medium', timeStyle: 'short' })}
+                      {notice.ends_at && ` · Expected end ${new Date(notice.ends_at).toLocaleString('en-KE', { dateStyle: 'medium', timeStyle: 'short' })}`}
+                    </p>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
         {outages.length > 0 && (
           <div className="mt-12">

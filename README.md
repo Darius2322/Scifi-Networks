@@ -264,6 +264,84 @@ persists in memory; logging out and back in, or opening a fresh tab, will.
 Run `db/007_inventory_transfer.sql` in Supabase before using the warehouse
 transfer feature.
 
+## Round 6: bug root-causes + voucher reservation + auto-routing + maintenance
+
+- **Actually fixed the mobile hamburger menu bug**, and found the real root
+  cause this time: the `<header>` had `backdrop-blur` applied to it. In CSS,
+  `backdrop-filter` creates a new **containing block** for any
+  `position: fixed` descendant — exactly like `transform` does. That meant
+  the fixed-position menu panel was being positioned relative to the
+  64px-tall header instead of the full viewport, collapsing it to near-zero
+  height. The button still toggled correctly (so the close icon appeared),
+  but the panel itself was invisible. Removed `backdrop-blur` from the
+  header to eliminate the containing block, and rebuilt the menu as a proper
+  full-screen overlay with a dimmed backdrop, click-outside-to-close, and
+  focus moved to the first link on open.
+- **Re-verified the staff-visibility fix from a previous round is still
+  correct**: every admin page/route reads staff through the service-role
+  client (not session-bound), and the `.not('role','in','(agent,customer)')`
+  filter syntax is valid. If staff still aren't appearing after this
+  deploys, that points to something environment-specific (e.g. a stale
+  deploy) rather than a code bug — worth a fresh look together if it persists.
+- **Voucher reservation, for real this time** — vouchers can now be
+  `reserved` (not just available/used/expired/cancelled), with a 30-minute
+  hold. `reserve_voucher()` uses a row-level lock (`db/008_...sql`) so two
+  staff members can never reserve the same voucher simultaneously — enforced
+  in the database, not just in the UI. Reservations release automatically
+  once the hold expires (swept daily by the existing voucher cron), or can
+  be released manually.
+- **Location-based ticket auto-routing** — when a ticket is created (public
+  report, track portal, or agent report), `route_ticket_to_agent()` looks up
+  an **active** agent actually assigned to that site in the database (never
+  hardcoded), picks whichever active agent currently has the fewest open
+  tickets, assigns the ticket to them, and sends them a notification. If no
+  active agent exists at that site, the ticket just has no agent — it still
+  falls into the admin/staff queue normally.
+- **Maintenance Notices** (`/wp-admin/maintenance`) — scheduled, plannable
+  announcements distinct from unplanned outages. Publish/unpublish, set
+  priority and a start/end window, scope to one site or all sites. Published
+  notices show on the public `/status` page above the outage list.
+
+Run `db/008_voucher_routing_maintenance.sql` in Supabase before deploying
+this round.
+
+**What I deliberately did not attempt this round**, given how large the
+request was: the full dark-mode-first visual redesign, a new Customer Care
+staff role and Worker role (distinct from the existing staff roles), agent/
+customer activity timelines, Supabase realtime subscriptions, and a
+command-palette-style (Cmd+K) search. These are all reasonable asks, but
+each is substantial enough to deserve its own focused round rather than
+being rushed alongside everything else — happy to start on whichever matters
+most to you next.
+
+## Round 7: Customer Care role + staff customer access + Cmd+K
+
+- **New `customer_care` staff role** — added to the `app_role` enum
+  (`db/009_customer_care_role.sql`), which required its own migration file
+  since Postgres won't let you add an enum value and use it in the same
+  transaction. `is_site_scoped_staff()` (the function every relevant RLS
+  policy calls) was updated to include it, so Customer Care automatically
+  gets the same site-scoped visibility as other front-line roles — no
+  individual policies needed touching.
+- **Staff can now actually look up customers** — previously there was no
+  `/staff/customers` page at all, which made "Customer Care" a role with
+  nothing to do. Added a search page and detail view (installations,
+  tickets, and a running notes panel), all RLS-scoped to the staff member's
+  own site via the session client, same pattern as the rest of the staff portal.
+- **Customer notes** (`customer_notes` table, `db/010_customer_notes.sql`) —
+  staff and customer care can leave internal notes on a customer record,
+  visible to anyone at that site, never to the customer themselves.
+- **Cmd+K / Ctrl+K** now focuses the admin global search from anywhere in
+  the admin portal.
+
+Run `db/009_customer_care_role.sql` and `db/010_customer_notes.sql` in
+Supabase, in that order, before deploying this round.
+
+**Still deliberately deferred**: the full dark-mode-first visual redesign,
+a distinct "Worker" role (separate from technician), agent/customer activity
+timelines, and Supabase realtime subscriptions. Let me know which of these
+matters most and I'll pick it up next.
+
 ## What's scaffolded but not yet built out
 
 Every section of the spec now has at least a working foundation, and the

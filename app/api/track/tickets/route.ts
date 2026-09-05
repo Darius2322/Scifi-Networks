@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
       location_text: parsed.data.location_text || null,
       status: 'submitted',
     })
-    .select('ticket_number')
+    .select('id, ticket_number')
     .single();
 
   if (error) {
@@ -86,6 +86,8 @@ export async function POST(req: NextRequest) {
     site_id: installation.site_id,
     metadata: { ticket_number: ticket.ticket_number, source: 'track_portal', type: parsed.data.type },
   });
+
+  await supabase.rpc('route_ticket_to_agent', { p_ticket_id: ticket.id });
 
   return NextResponse.json({ ticket_number: ticket.ticket_number }, { status: 201 });
 }

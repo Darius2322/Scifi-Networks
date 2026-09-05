@@ -35,6 +35,22 @@ export async function getActivePackages(serviceType?: string) {
   return data ?? [];
 }
 
+export async function getActiveMaintenanceNotices() {
+  const supabase = createServerSupabase();
+  const { data, error } = await supabase
+    .from('maintenance_notices')
+    .select('id, title, description, affected_service, priority, status, starts_at, ends_at, sites(name)')
+    .eq('is_published', true)
+    .not('status', 'in', '(completed,cancelled)')
+    .order('starts_at', { ascending: true });
+
+  if (error) {
+    console.error('getActiveMaintenanceNotices failed', error.message);
+    return [];
+  }
+  return data ?? [];
+}
+
 export async function getSiteSettings() {
   const supabase = createServerSupabase();
   const { data } = await supabase

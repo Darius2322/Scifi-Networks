@@ -11,11 +11,14 @@ type Voucher = {
   value_kes: number | null;
   issued_at: string;
   expires_at: string | null;
+  reserved_by?: string | null;
+  reservation_expires_at?: string | null;
   agents: any;
 };
 
 const STATUS_STYLE: Record<string, string> = {
   available: 'text-status-good',
+  reserved: 'text-signal-500',
   used: 'text-ink-800/50',
   expired: 'text-status-warn',
   cancelled: 'text-status-bad',
@@ -69,6 +72,33 @@ export function VoucherManager({ initialVouchers, agents }: { initialVouchers: V
                     >
                       Resend
                     </button>
+                    {v.status === 'available' && (
+                      <button
+                        onClick={async () => {
+                          const res = await fetch(`/api/admin/vouchers/${v.id}/reserve`, { method: 'POST' });
+                          if (!res.ok) {
+                            const json = await res.json();
+                            window.alert(json.error ?? 'Could not reserve this voucher.');
+                            return;
+                          }
+                          location.reload();
+                        }}
+                        className="text-signal-500 hover:text-signal-600"
+                      >
+                        Reserve
+                      </button>
+                    )}
+                    {v.status === 'reserved' && (
+                      <button
+                        onClick={async () => {
+                          await fetch(`/api/admin/vouchers/${v.id}/release`, { method: 'POST' });
+                          location.reload();
+                        }}
+                        className="text-status-warn hover:text-status-warn/80"
+                      >
+                        Release
+                      </button>
+                    )}
                     {v.status === 'available' && (
                       <button
                         onClick={async () => {

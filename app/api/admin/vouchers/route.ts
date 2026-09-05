@@ -24,7 +24,7 @@ export async function GET() {
   const supabase = createServiceRoleClient();
   const { data, error } = await supabase
     .from('vouchers')
-    .select('id, code, status, value_kes, issued_at, expires_at, agents(customers(full_name))')
+    .select('id, code, status, value_kes, issued_at, expires_at, reserved_by, reservation_expires_at, agents(customers(full_name))')
     .order('issued_at', { ascending: false })
     .limit(100);
 

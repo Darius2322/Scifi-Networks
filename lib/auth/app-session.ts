@@ -54,6 +54,7 @@ export const STAFF_ROLES = [
   'technician',
   'support_staff',
   'inventory_staff',
+  'customer_care',
 ];
 
 export const ADMIN_ROLES = ['owner', 'admin'];
