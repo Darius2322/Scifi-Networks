@@ -33,12 +33,12 @@ export async function SiteFooter() {
   const activeSocial = Object.entries(social).filter(([, url]) => url);
 
   return (
-    <footer className="border-t border-ink-950/10 bg-ink-950 text-paper-100">
+    <footer className="border-t border-ink-950/10 bg-surface-dark text-white/90">
       <div className="container-page py-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
         <div>
           <p className="font-display text-lg font-semibold text-white">SciFi Networks</p>
-          <p className="mt-2 text-sm text-paper-200/70 max-w-[26ch]">
-            A network that everyone is using but you are not.
+          <p className="mt-2 text-sm text-white/70 max-w-[26ch]">
+            Fast, reliable internet built for the way you live, work and play.
           </p>
           {activeSocial.length > 0 && (
             <div className="mt-4 flex gap-3">
@@ -49,7 +49,7 @@ export async function SiteFooter() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={platform}
-                  className="text-paper-200/70 hover:text-white transition-colors"
+                  className="text-white/70 hover:text-white transition-colors"
                 >
                   {SOCIAL_ICONS[platform] ?? null}
                 </a>
@@ -86,9 +86,9 @@ export async function SiteFooter() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container-page py-5 flex items-center justify-between text-xs text-paper-200/60">
+        <div className="container-page py-5 flex items-center justify-between text-xs text-white/60">
           <span>© {new Date().getFullYear()} SciFi Networks. All rights reserved.</span>
-          <ShareButton className="!text-paper-200/70 hover:!text-white" />
+          <ShareButton className="!text-white/70 hover:!text-white" />
         </div>
       </div>
     </footer>
@@ -102,7 +102,7 @@ function FooterColumn({ title, links }: { title: string; links: { href: string; 
       <ul className="mt-3 space-y-2">
         {links.map((l) => (
           <li key={l.href}>
-            <Link href={l.href} className="text-sm text-paper-200/70 hover:text-white transition-colors">
+            <Link href={l.href} className="text-sm text-white/70 hover:text-white transition-colors">
               {l.label}
             </Link>
           </li>

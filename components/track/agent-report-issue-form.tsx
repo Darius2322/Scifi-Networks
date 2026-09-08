@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { PhotoUpload } from '@/components/ui/photo-upload';
 
 const ISSUE_TYPES = [
   { value: 'outage', label: 'Network outage in my area' },
@@ -14,6 +15,7 @@ export function AgentReportIssueForm() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [ticketNumber, setTicketNumber] = useState<string | null>(null);
+  const [ticketId, setTicketId] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -40,6 +42,7 @@ export function AgentReportIssueForm() {
         return;
       }
       setTicketNumber(json.ticket_number);
+      setTicketId(json.ticket_id);
     } catch {
       setError('Something went wrong. Please try again.');
     } finally {
@@ -53,6 +56,7 @@ export function AgentReportIssueForm() {
         <p className="text-sm font-medium text-status-good">Report received</p>
         <p className="mt-2 font-display text-xl font-semibold text-ink-950">{ticketNumber}</p>
         <p className="mt-2 text-sm text-ink-800/80">Thank you for helping keep the network running.</p>
+        {ticketId && <PhotoUpload ticketId={ticketId} />}
       </div>
     );
   }

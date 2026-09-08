@@ -20,16 +20,16 @@ export function StatusStrip({ sites }: { sites: Site[] }) {
   if (sites.length === 0) return null;
 
   return (
-    <div className="border-b border-ink-950/10 bg-ink-950 text-paper-100">
+    <div className="border-b border-ink-950/10 bg-surface-dark text-white/90">
       <div className="container-page flex flex-wrap items-center gap-x-6 gap-y-2 py-2.5 text-xs">
-        <span className="text-paper-200/60 uppercase tracking-wide font-medium">Network status</span>
+        <span className="text-white/60 uppercase tracking-wide font-medium">Network status</span>
         {sites.map((site) => (
           <span key={site.id} className="flex items-center gap-1.5">
             <span className={`inline-block h-1.5 w-1.5 rounded-full ${STATUS_DOT[site.network_status] ?? 'bg-status-good'}`} />
             {site.name} — {STATUS_LABEL[site.network_status] ?? 'Operational'}
           </span>
         ))}
-        <Link href="/status" className="ml-auto text-signal-400 hover:text-signal-500 transition-colors">
+        <Link href="/status" className="ml-auto text-white/80 hover:text-white transition-colors">
           Full status page
         </Link>
       </div>

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 type Site = { id: string; name: string };
 type Agent = {
@@ -77,7 +78,11 @@ function AgentRow({ agent, onChanged }: { agent: Agent; onChanged: () => void })
     <>
       <tr>
         <td className="p-3">
-          <p className="font-medium text-ink-950">{customer?.full_name ?? '—'}</p>
+          <p className="font-medium text-ink-950">
+            <Link href={`/wp-admin/agents/${agent.id}`} className="hover:text-signal-500">
+              {customer?.full_name ?? '—'}
+            </Link>
+          </p>
           <p className="text-ink-800/60">{customer?.phone}</p>
         </td>
         <td className="p-3 text-ink-800/70">{site?.name ?? '—'}</td>

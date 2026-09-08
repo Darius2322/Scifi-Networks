@@ -52,5 +52,20 @@ export async function POST(req: NextRequest) {
     metadata: { ip },
   });
 
+  // Check whether this account has 2FA enrolled — if so, the password
+  // alone only grants a partial (AAL1) session; the login isn't complete
+  // until the TOTP code is verified too.
+  const { data: mfaData } = await supabase.auth.mfa.listFactors();
+  const verifiedTotp = mfaData?.totp?.find((f) => f.status === 'verified');
+
+  if (verifiedTotp) {
+    return NextResponse.json({
+      ok: true,
+      mfaRequired: true,
+      factorId: verifiedTotp.id,
+      mustChangePassword: lookup.mustChangePassword,
+    });
+  }
+
   return NextResponse.json({ ok: true, mustChangePassword: lookup.mustChangePassword });
 }

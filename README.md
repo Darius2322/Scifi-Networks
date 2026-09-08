@@ -342,6 +342,131 @@ a distinct "Worker" role (separate from technician), agent/customer activity
 timelines, and Supabase realtime subscriptions. Let me know which of these
 matters most and I'll pick it up next.
 
+## Round 8: Worker role, task assignment, activity timelines
+
+- **New `worker` staff role** (`db/011_worker_role.sql`, its own migration
+  file for the same enum-transaction reason as `customer_care`).
+- **Task assignment system** (`staff_tasks` table, `db/012_staff_tasks.sql`)
+  — admin can assign a task (title, description, optional site) to any
+  staff member or worker at `/wp-admin/tasks`; the assignee sees and updates
+  their own tasks at `/staff/tasks`. RLS restricts task updates to the
+  assignee themselves or a site manager at that task's site.
+- **Agent detail page** (`/wp-admin/agents/[id]`) — full profile with real
+  voucher counts (available/reserved/used/expired), responsibilities, last
+  voucher, and a merged activity timeline built from that agent's actual
+  tickets, vouchers, and audit log entries — not placeholder data. Agent
+  names in the list now link here.
+- **Customer activity timeline** — added to the existing customer detail
+  page, merging installations, tickets, and payments into one chronological
+  feed.
+
+Run `db/011_worker_role.sql` then `db/012_staff_tasks.sql`, in that order,
+before deploying this round.
+
+**Still not built**: the full dark-mode-first visual redesign and Supabase
+realtime subscriptions (live-updating dashboards without a manual refresh).
+Both are meaningful chunks of work on their own — let me know if either is
+the next priority.
+
+## Round 9 (final): dark-mode-first + realtime
+
+- **Dark is now the actual default theme**, not just an available option.
+  A small inline script in `app/layout.tsx` sets the theme before first
+  paint (reading `localStorage`, defaulting to dark if nothing's stored),
+  so there's no flash of the light theme while the page hydrates.
+- **Fixed a real bug this surfaced**: several structural brand elements
+  (admin sidebar, staff header, site footer, the status strip) were built
+  using `bg-ink-950 text-white` — meaning "always dark" only worked by
+  accident, because dark used to be the *unused* state. Once dark became
+  the actual default, `ink-950` (which flips to near-white in dark theme)
+  would have turned these bars into white-on-white and text-color-matching-
+  background nearly everywhere. Introduced a fixed, non-flipping
+  `surface-dark` color for exactly these "always dark regardless of theme"
+  brand elements, and fixed every de-emphasized text color and active-nav
+  highlight that had the same flipping-token trap (several were using
+  `text-paper-200` or `text-signal-400` for text sitting on these bars,
+  which would have gone low-contrast or invisible in light mode specifically).
+- **Realtime notification bell** (`components/ui/notification-bell.tsx`) —
+  in both the admin and staff headers, subscribed via Supabase Realtime to
+  exactly one person's own notifications (filtered server-side by
+  `app_user_id`, never the whole table), with an unread badge.
+- **Live voucher list refresh** — the admin vouchers page now subscribes to
+  changes on the `vouchers` table and refreshes automatically, so if one
+  staff member reserves a voucher, everyone else's screen updates without a
+  manual reload. The actual prevention of double-reservation was already
+  server-side (a row lock in `reserve_voucher()`); this closes the loop on
+  the UI staying honest about it.
+- Per the spec's own guidance ("avoid realtime subscriptions on everything"),
+  I deliberately did **not** add realtime to every table — just these two,
+  where stale data would cause a real UX problem.
+
+Run `db/013_enable_realtime.sql` in Supabase before deploying this round —
+Supabase requires tables to be explicitly added to the realtime publication,
+or these subscriptions will silently receive nothing.
+
+This closes out every item from the full redesign spec. What remains beyond
+that spec entirely: file uploads for issue/installation photos, and
+equipment serial/MAC tracking UI (both noted since the very first build,
+schema already supports them, no UI yet).
+
+## Round 10 (finishing pass): everything from the "not done" list
+
+- **New primary tagline** — "Connect Beyond Limits." with the supporting
+  line "Fast, reliable internet built for the way you live, work and play."
+  now used as the homepage headline/subhead, and everywhere else the old
+  tagline appeared: page metadata, Open Graph tags, the footer, and the PWA
+  manifest description.
+- **File uploads for photos** — a private Supabase Storage bucket
+  (`db/015_storage_bucket.sql`), a shared upload route that authorizes three
+  different situations (logged-in staff/admin, an authenticated track-portal
+  session, or a short-lived token issued right after an anonymous public
+  report), and photo attachment UI on all three report-issue flows (public,
+  track portal, agent). Staff/admin see uploaded photos as thumbnails on the
+  ticket detail page via short-lived signed URLs — the bucket itself stays
+  fully private.
+- **Equipment tracking** (`/wp-admin/equipment`) — add equipment with model/
+  serial/MAC, track status (in stock → assigned → installed → faulty →
+  retired, etc.), see which customer it's assigned to.
+- **Voucher batch creation** — "Add vouchers (batch)" on the vouchers page
+  creates up to 200 at once for one agent in a single insert.
+- **Admin 2FA** — real TOTP via Supabase Auth's built-in MFA support, not a
+  custom implementation. Enroll at Settings → Security (scan a QR code,
+  confirm with a code). Once enabled, a password alone only grants a partial
+  session — `requireAdmin()` and `getAppUserSession()` both check the
+  authenticator assurance level and block access until the TOTP step
+  completes, so this is enforced at the actual data-access layer, not just
+  the login screen.
+- **Settings reorganized into sections** — Branding & Contact, Security,
+  Users & Roles (links to Staff), Locations (links to Sites), navigable via
+  tabs.
+- **Real charts** — added `recharts`; the new Payments & Revenue page shows
+  an actual 30-day revenue line chart built from real payment records, not
+  a placeholder.
+- **Payments & Revenue tracking** (`/wp-admin/payments`) — record a payment
+  against a customer (M-Pesa, cash, bank transfer, other) and see total
+  revenue + the chart update from real data. This is manual recording, not
+  a live payment gateway — actually taking M-Pesa payments would need your
+  Safaricom Daraja API credentials, which I don't have and can't fabricate.
+- **Real command palette** — Cmd+K in the admin now opens a proper
+  centered modal overlay (not just a focused inline search bar), searching
+  the same customers/tickets/staff/inventory/vouchers/sites index.
+- **Mobile bottom navigation** on the public site (Home / Connect / Track /
+  Support), shown only on small screens, with the homepage moved into the
+  `(public)` route group so it shares this layout with every other
+  marketing page.
+
+Run, in order: `db/014_payments.sql`, `db/015_storage_bucket.sql`. Also run
+`npm install` after pulling this — `recharts` was added as a new dependency.
+
+**What genuinely cannot be finished without something only you can provide**:
+a real payment gateway integration (needs Safaricom Daraja API credentials)
+and SMS/WhatsApp notification delivery (needs a provider account — e.g.
+Africa's Talking or Twilio — and its API key). Both are wired up as far as
+they can be without live credentials: payments have a full manual-entry
+workflow and revenue reporting; notifications already work in-app and are
+structured so an SMS/WhatsApp adapter could be added as an extra delivery
+channel without changing the data model.
+
 ## What's scaffolded but not yet built out
 
 Every section of the spec now has at least a working foundation, and the

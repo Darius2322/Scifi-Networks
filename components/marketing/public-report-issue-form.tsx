@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { PhotoUpload } from '@/components/ui/photo-upload';
 
 type Site = { id: string; name: string };
 
@@ -16,6 +17,8 @@ export function PublicReportIssueForm({ sites }: { sites: Site[] }) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [ticketNumber, setTicketNumber] = useState<string | null>(null);
+  const [ticketId, setTicketId] = useState<string | null>(null);
+  const [attachmentToken, setAttachmentToken] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -36,6 +39,8 @@ export function PublicReportIssueForm({ sites }: { sites: Site[] }) {
         return;
       }
       setTicketNumber(json.ticket_number);
+      setTicketId(json.ticket_id);
+      setAttachmentToken(json.attachment_token);
     } catch {
       setError('Something went wrong. Please try again.');
     } finally {
@@ -57,6 +62,7 @@ export function PublicReportIssueForm({ sites }: { sites: Site[] }) {
         <p className="mt-3 text-sm text-ink-800/80">
           Save this ticket number — you can reference it if you contact us for an update.
         </p>
+        {ticketId && <PhotoUpload ticketId={ticketId} attachmentToken={attachmentToken ?? undefined} />}
       </div>
     );
   }

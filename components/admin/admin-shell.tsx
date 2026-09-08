@@ -5,6 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { GlobalSearch } from './global-search';
+import { NotificationBell } from '@/components/ui/notification-bell';
 
 const NAV_GROUPS = [
   {
@@ -18,6 +19,7 @@ const NAV_GROUPS = [
       { href: '/wp-admin/installations', label: 'Installations' },
       { href: '/wp-admin/tickets', label: 'Tickets' },
       { href: '/wp-admin/inventory', label: 'Inventory' },
+      { href: '/wp-admin/equipment', label: 'Equipment' },
     ],
   },
   {
@@ -26,6 +28,7 @@ const NAV_GROUPS = [
       { href: '/wp-admin/sites', label: 'Sites' },
       { href: '/wp-admin/packages', label: 'Packages' },
       { href: '/wp-admin/vouchers', label: 'Vouchers' },
+      { href: '/wp-admin/payments', label: 'Payments' },
       { href: '/wp-admin/maintenance', label: 'Maintenance' },
       { href: '/wp-admin/reviews', label: 'Reviews' },
       { href: '/wp-admin/reports', label: 'Reports' },
@@ -37,6 +40,7 @@ const NAV_GROUPS = [
     items: [
       { href: '/wp-admin/agents', label: 'Agents' },
       { href: '/wp-admin/staff', label: 'Staff' },
+      { href: '/wp-admin/tasks', label: 'Tasks' },
     ],
   },
   {
@@ -109,14 +113,14 @@ export function AdminShell({ children, fullName }: { children: React.ReactNode; 
   return (
     <div className="lg:h-screen lg:overflow-hidden lg:flex bg-paper-50 min-h-screen">
       {/* Desktop: permanent sidebar */}
-      <aside className="hidden lg:flex lg:w-64 shrink-0 bg-ink-950 text-white flex-col lg:h-full">
+      <aside className="hidden lg:flex lg:w-64 shrink-0 bg-surface-dark text-white flex-col lg:h-full">
         {SidebarNav}
       </aside>
 
       {/* Mobile: slide-in drawer, never dumped inline above content */}
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-50 flex">
-          <div className="w-72 max-w-[80vw] bg-ink-950 text-white flex flex-col h-full">{SidebarNav}</div>
+          <div className="w-72 max-w-[80vw] bg-surface-dark text-white flex flex-col h-full">{SidebarNav}</div>
           <button
             className="flex-1 bg-black/40"
             onClick={() => setMobileOpen(false)}
@@ -140,6 +144,7 @@ export function AdminShell({ children, fullName }: { children: React.ReactNode; 
             <div className="flex-1">
               <GlobalSearch />
             </div>
+            <NotificationBell />
             <span className="text-ink-800/70 hidden sm:inline whitespace-nowrap">{fullName}</span>
           </div>
         </header>

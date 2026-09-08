@@ -16,7 +16,7 @@ type StaffMember = {
   sites: { name: string } | { name: string }[] | null;
 };
 
-const ROLES = ['site_manager', 'supervisor', 'technician', 'support_staff', 'inventory_staff', 'customer_care'];
+const ROLES = ['site_manager', 'supervisor', 'technician', 'support_staff', 'inventory_staff', 'customer_care', 'worker'];
 
 export function StaffManager({ initialStaff, sites }: { initialStaff: StaffMember[]; sites: Site[] }) {
   const router = useRouter();

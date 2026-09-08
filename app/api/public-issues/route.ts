@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createServiceRoleClient } from '@/lib/supabase/server';
-import { isRateLimited } from '@/lib/auth/rate-limit';
+import { signAttachmentToken } from '@/lib/auth/attachment-token';
 
 const publicIssueSchema = z.object({
   reporter_name: z.string().trim().min(2).max(120),
@@ -77,5 +77,5 @@ export async function POST(req: NextRequest) {
   // site and hand them the ticket. Never hardcoded — always a live lookup.
   await supabase.rpc('route_ticket_to_agent', { p_ticket_id: ticket.id });
 
-  return NextResponse.json({ ticket_number: ticket.ticket_number }, { status: 201 });
+  return NextResponse.json({ ticket_number: ticket.ticket_number, ticket_id: ticket.id, attachment_token: await signAttachmentToken(ticket.id) }, { status: 201 });
 }

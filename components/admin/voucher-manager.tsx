@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { createClient } from '@/lib/supabase/client';
 
 type Agent = { id: string; customers: { full_name: string } | { full_name: string }[] | null };
 type Voucher = {
@@ -26,6 +27,25 @@ const STATUS_STYLE: Record<string, string> = {
 
 export function VoucherManager({ initialVouchers, agents }: { initialVouchers: Voucher[]; agents: Agent[] }) {
   const router = useRouter();
+
+  // Live refresh when any voucher changes — e.g. another staff member
+  // reserving one — so the list never shows a stale "available" state.
+  // Actual prevention of double-reservation is server-side via a row lock
+  // (see reserve_voucher() in db/008); this just keeps the screen honest.
+  useEffect(() => {
+    const supabase = createClient();
+    const channel = supabase
+      .channel('vouchers-admin-list')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'vouchers' }, () => {
+        router.refresh();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="grid lg:grid-cols-[1fr_360px] gap-8">
@@ -131,8 +151,71 @@ export function VoucherManager({ initialVouchers, agents }: { initialVouchers: V
         <div className="mt-4">
           <IssueVoucherForm agents={agents} onIssued={() => router.refresh()} />
         </div>
+
+        <h2 className="mt-8 font-medium text-ink-950">Add vouchers (batch)</h2>
+        <div className="mt-4">
+          <BatchVoucherForm agents={agents} onIssued={() => router.refresh()} />
+        </div>
       </div>
     </div>
+  );
+}
+
+function BatchVoucherForm({ agents, onIssued }: { agents: Agent[]; onIssued: () => void }) {
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setSubmitting(true);
+    setError(null);
+    setSuccess(null);
+    const formData = new FormData(e.currentTarget);
+
+    try {
+      const res = await fetch('/api/admin/vouchers/batch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.fromEntries(formData.entries())),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setError(json.error ?? 'Could not create the batch.');
+        return;
+      }
+      setSuccess(`Created ${json.created} vouchers.`);
+      (e.target as HTMLFormElement).reset();
+      onIssued();
+    } catch {
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+      {error && <p className="border border-status-bad/30 bg-status-bad/5 p-2.5 text-xs text-status-bad">{error}</p>}
+      {success && <p className="border border-status-good/30 bg-status-good/5 p-2.5 text-xs text-status-good">{success}</p>}
+      <select name="agent_id" required className="w-full border border-ink-950/15 bg-paper-50 px-3 py-2 text-sm">
+        <option value="">Select an agent</option>
+        {agents.map((a) => {
+          const name = Array.isArray(a.customers) ? a.customers[0]?.full_name : a.customers?.full_name;
+          return (
+            <option key={a.id} value={a.id}>
+              {name}
+            </option>
+          );
+        })}
+      </select>
+      <input name="quantity" type="number" min="1" max="200" required placeholder="How many vouchers?" className="w-full border border-ink-950/15 bg-paper-50 px-3 py-2 text-sm" />
+      <input name="value_kes" type="number" placeholder="Value per voucher (KES, optional)" className="w-full border border-ink-950/15 bg-paper-50 px-3 py-2 text-sm" />
+      <input name="expires_at" type="date" className="w-full border border-ink-950/15 bg-paper-50 px-3 py-2 text-sm" />
+      <button type="submit" disabled={submitting} className="w-full bg-signal-500 text-white px-4 py-2.5 text-sm font-medium disabled:opacity-60">
+        {submitting ? 'Creating…' : 'Create batch'}
+      </button>
+    </form>
   );
 }
 

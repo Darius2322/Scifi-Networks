@@ -23,14 +23,14 @@ const body = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL('https://scifinetworks.vercel.app'),
   title: {
-    default: 'SciFi Networks — Reliable Internet, Built Around You',
+    default: 'SciFi Networks — Connect Beyond Limits',
     template: '%s | SciFi Networks',
   },
   description:
-    'SciFi Networks provides reliable home and business Internet across Kemera, Nyanchwa, and growing service areas. Get connected, track your request, and get support — all in one place.',
+    'SciFi Networks provides fast, reliable home and business Internet across Kemera, Nyanchwa, and growing service areas. Get connected, track your request, and get support — all in one place.',
   openGraph: {
-    title: 'SciFi Networks — Reliable Internet, Built Around You',
-    description: 'A network that everyone is using but you are not.',
+    title: 'SciFi Networks — Connect Beyond Limits',
+    description: 'Fast, reliable internet built for the way you live, work and play.',
     siteName: 'SciFi Networks',
     type: 'website',
   },
@@ -44,6 +44,26 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${display.variable} ${body.variable}`}>
+      <head>
+        {/* Sets the theme before first paint, defaulting to dark per the
+            dark-mode-first design direction, so there's no flash of the
+            wrong theme while the ThemeToggle component hydrates. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function () {
+                try {
+                  var stored = localStorage.getItem('scifi-theme');
+                  var theme = stored === 'light' ? 'light' : 'dark';
+                  document.documentElement.setAttribute('data-theme', theme);
+                } catch (e) {
+                  document.documentElement.setAttribute('data-theme', 'dark');
+                }
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className="font-body">
         {children}
         <ServiceWorkerRegistration />

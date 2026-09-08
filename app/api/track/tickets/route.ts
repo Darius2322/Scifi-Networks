@@ -89,5 +89,5 @@ export async function POST(req: NextRequest) {
 
   await supabase.rpc('route_ticket_to_agent', { p_ticket_id: ticket.id });
 
-  return NextResponse.json({ ticket_number: ticket.ticket_number }, { status: 201 });
+  return NextResponse.json({ ticket_number: ticket.ticket_number, ticket_id: ticket.id }, { status: 201 });
 }

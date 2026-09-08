@@ -30,6 +30,15 @@ export async function requireAdmin(): Promise<AdminApiAuth> {
     return { ok: false, status: 403, error: 'You do not have permission to do that.' };
   }
 
+  // If this account has 2FA enrolled, a password-only session (AAL1) is not
+  // enough — every admin API call is blocked until the TOTP step has been
+  // completed too. This is the real enforcement point; the login UI's MFA
+  // prompt is just how the person gets from AAL1 to AAL2 in the first place.
+  const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+  if (aal && aal.nextLevel === 'aal2' && aal.currentLevel !== 'aal2') {
+    return { ok: false, status: 401, error: 'Two-factor verification required.' };
+  }
+
   return { ok: true, userId: user.id };
 }
 

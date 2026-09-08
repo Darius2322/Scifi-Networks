@@ -21,14 +21,14 @@ export default async function HomePage() {
         <section className="border-b border-ink-950/10">
           <div className="container-page grid lg:grid-cols-[1.1fr_0.9fr] gap-12 py-16 lg:py-24 items-center">
             <div>
-              <p className="text-sm font-medium text-signal-500">A network that everyone is using but you are not.</p>
+              <p className="text-sm font-medium text-signal-500">SciFi Networks</p>
               <h1 className="mt-3 font-display text-4xl sm:text-5xl font-semibold leading-[1.08] text-ink-950">
-                Reliable Internet. Built Around You.
+                Connect Beyond Limits.
               </h1>
               <p className="mt-5 text-lg text-ink-800 max-w-prose">
-                A network that everyone is using but you are not — yet. We connect homes and
-                businesses across your area with straightforward pricing, real local support,
-                and installation that actually shows up on time.
+                Fast, reliable internet built for the way you live, work and play. We connect
+                homes and businesses across your area with straightforward pricing, real local
+                support, and installation that actually shows up on time.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">

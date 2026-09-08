@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
       location_text: parsed.data.location_text || null,
       status: 'submitted',
     })
-    .select('ticket_number')
+    .select('id, ticket_number')
     .single();
 
   if (error) {
@@ -86,5 +86,5 @@ export async function POST(req: NextRequest) {
     metadata: { ticket_number: ticket.ticket_number, source: 'agent_dashboard', type: parsed.data.type },
   });
 
-  return NextResponse.json({ ticket_number: ticket.ticket_number }, { status: 201 });
+  return NextResponse.json({ ticket_number: ticket.ticket_number, ticket_id: ticket.id }, { status: 201 });
 }

@@ -30,6 +30,14 @@ const config: Config = {
           warn: 'rgb(var(--color-status-warn) / <alpha-value>)',
           bad: 'rgb(var(--color-status-bad) / <alpha-value>)',
         },
+        // Fixed (non-theme-flipping) dark surface for structural brand
+        // elements — sidebars, footers, header brand strips — that should
+        // stay visually consistent regardless of which theme the person
+        // has selected for the main content canvas.
+        surface: {
+          dark: '#0F172A',
+          darkhover: '#1E293B',
+        },
       },
       fontFamily: {
         display: ['var(--font-display)', 'system-ui', 'sans-serif'], // Manrope

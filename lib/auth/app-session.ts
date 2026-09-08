@@ -37,6 +37,17 @@ export async function getAppUserSession(): Promise<AppUserSession | null> {
 
   if (!profile || !profile.is_active) return null;
 
+  // Enforce 2FA at the page level too: if this account has a verified TOTP
+  // factor and the current session is only AAL1 (password-only), treat it
+  // as not logged in — this is what actually keeps a stolen password alone
+  // from being enough to view any admin page, not just API calls.
+  if (['owner', 'admin'].includes(profile.role)) {
+    const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+    if (aal && aal.nextLevel === 'aal2' && aal.currentLevel !== 'aal2') {
+      return null;
+    }
+  }
+
   return {
     id: profile.id,
     full_name: profile.full_name,
@@ -54,7 +65,7 @@ export const STAFF_ROLES = [
   'technician',
   'support_staff',
   'inventory_staff',
-  'customer_care',
+  'customer_care', 'worker',
 ];
 
 export const ADMIN_ROLES = ['owner', 'admin'];

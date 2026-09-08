@@ -149,7 +149,35 @@ export function CustomerDetailPanel({ customer, installations, tickets, payments
           </>
         )} />
       </div>
+
+      <div className="mt-8 border border-ink-950/10 p-5">
+        <h2 className="text-sm font-medium text-ink-950">Activity timeline</h2>
+        <ActivityTimeline installations={installations} tickets={tickets} payments={payments} />
+      </div>
     </div>
+  );
+}
+
+function ActivityTimeline({ installations, tickets, payments }: any) {
+  const events = [
+    ...installations.map((i: any) => ({ at: i.created_at, label: `Installation ${i.ticket_number} — ${i.status.replace('_', ' ')}` })),
+    ...tickets.map((t: any) => ({ at: t.created_at, label: `Ticket: ${t.subject} — ${t.status.replace('_', ' ')}` })),
+    ...payments.map((p: any) => ({ at: p.created_at, label: `Payment of KES ${Number(p.amount_kes).toLocaleString()} — ${p.status}` })),
+  ].sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime());
+
+  if (events.length === 0) {
+    return <p className="mt-2 text-sm text-ink-800/60">No activity recorded yet.</p>;
+  }
+
+  return (
+    <ul className="mt-3 space-y-3 max-h-72 overflow-y-auto">
+      {events.map((e, i) => (
+        <li key={i} className="text-sm border-b border-ink-950/5 pb-2">
+          <p className="text-ink-800">{e.label}</p>
+          <p className="text-xs text-ink-800/50">{new Date(e.at).toLocaleString('en-KE', { dateStyle: 'medium', timeStyle: 'short' })}</p>
+        </li>
+      ))}
+    </ul>
   );
 }
 

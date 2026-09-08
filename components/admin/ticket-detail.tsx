@@ -16,8 +16,17 @@ const PRIORITIES = ['low', 'normal', 'high', 'critical'];
 
 export function TicketDetail({ ticketId, basePath }: Props) {
   const [data, setData] = useState<any | null>(null);
+  const [attachments, setAttachments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  async function loadAttachments() {
+    const res = await fetch(`/api/tickets/${ticketId}/attachments/list`);
+    if (res.ok) {
+      const json = await res.json();
+      setAttachments(json.attachments ?? []);
+    }
+  }
 
   async function load() {
     setLoading(true);
@@ -36,6 +45,7 @@ export function TicketDetail({ ticketId, basePath }: Props) {
 
   useEffect(() => {
     load();
+    loadAttachments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ticketId]);
 
@@ -73,6 +83,19 @@ export function TicketDetail({ ticketId, basePath }: Props) {
               <h2 className="text-sm font-medium text-ink-950">Description</h2>
               <p className="mt-2 text-sm text-ink-800/80">{ticket.description}</p>
               {ticket.location_text && <p className="mt-2 text-sm text-ink-800/60">Location: {ticket.location_text}</p>}
+              {attachments.length > 0 && (
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {attachments.map((a) => (
+                    <a key={a.id} href={a.url ?? '#'} target="_blank" rel="noopener noreferrer" className="block">
+                      {a.url ? (
+                        <img src={a.url} alt={a.file_name} className="h-20 w-20 object-cover border border-ink-950/10" />
+                      ) : (
+                        <span className="text-xs text-ink-800/50">{a.file_name}</span>
+                      )}
+                    </a>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
