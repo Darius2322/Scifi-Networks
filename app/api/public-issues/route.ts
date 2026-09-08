@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createServiceRoleClient } from '@/lib/supabase/server';
+import { isRateLimited } from '@/lib/auth/rate-limit';
 import { signAttachmentToken } from '@/lib/auth/attachment-token';
 
 const publicIssueSchema = z.object({
