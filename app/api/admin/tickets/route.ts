@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
 
   let query = supabase
     .from('tickets')
-    .select('id, ticket_number, type, subject, priority, status, created_at, sites(name), assigned_to')
+    .select('id, ticket_number, type, subject, priority, status, created_at, sites(name), assigned_to, customers(full_name, phone, email), reporter_name, reporter_contact')
     .order('created_at', { ascending: false })
     .limit(100);
 

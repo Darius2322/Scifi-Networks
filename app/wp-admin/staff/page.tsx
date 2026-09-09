@@ -10,7 +10,7 @@ export default async function AdminStaffPage() {
   if (!ADMIN_ROLES.includes(session.role)) redirect('/wp-admin/login');
 
   const supabase = createServiceRoleClient();
-  const [{ data: staff }, { data: sites }] = await Promise.all([
+  const [{ data: staff, error: staffError }, { data: sites }] = await Promise.all([
     supabase
       .from('app_users')
       .select('id, full_name, username, email, role, site_id, is_active, last_login_at, sites(name)')
@@ -22,6 +22,11 @@ export default async function AdminStaffPage() {
   return (
     <AdminShell fullName={session.full_name}>
       <h1 className="font-display text-2xl font-semibold text-ink-950">Staff</h1>
+      {staffError && (
+        <p className="mt-4 border border-status-bad/30 bg-status-bad/5 p-3 text-sm text-status-bad">
+          Could not load staff: {staffError.message}
+        </p>
+      )}
       <div className="mt-6">
         <StaffManager initialStaff={staff ?? []} sites={sites ?? []} />
       </div>

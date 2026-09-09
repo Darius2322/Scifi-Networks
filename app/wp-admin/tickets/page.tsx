@@ -13,7 +13,7 @@ export default async function AdminTicketsPage() {
   const [{ data: tickets }, { data: sites }] = await Promise.all([
     supabase
       .from('tickets')
-      .select('id, ticket_number, type, subject, priority, status, created_at, sites(name)')
+      .select('id, ticket_number, type, subject, priority, status, created_at, sites(name), customers(full_name, phone, email), reporter_name, reporter_contact')
       .order('created_at', { ascending: false })
       .limit(100),
     supabase.from('sites').select('id, name').order('name'),

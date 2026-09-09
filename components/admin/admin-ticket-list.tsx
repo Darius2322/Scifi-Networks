@@ -13,6 +13,9 @@ type Ticket = {
   status: string;
   created_at: string;
   sites: { name: string } | { name: string }[] | null;
+  customers?: { full_name: string; phone: string | null; email: string | null } | { full_name: string; phone: string | null; email: string | null }[] | null;
+  reporter_name?: string | null;
+  reporter_contact?: string | null;
 };
 
 const PRIORITY_STYLE: Record<string, string> = {
@@ -88,6 +91,7 @@ export function AdminTicketList({ initialTickets, sites }: { initialTickets: Tic
           <thead className="border-b border-ink-950/10 text-left text-ink-800/60">
             <tr>
               <th className="p-3 font-medium">Ticket</th>
+              <th className="p-3 font-medium">Contact</th>
               <th className="p-3 font-medium">Site</th>
               <th className="p-3 font-medium">Priority</th>
               <th className="p-3 font-medium">Status</th>
@@ -96,6 +100,9 @@ export function AdminTicketList({ initialTickets, sites }: { initialTickets: Tic
           <tbody className="divide-y divide-ink-950/10">
             {tickets.map((t) => {
               const site = Array.isArray(t.sites) ? t.sites[0] : t.sites;
+              const customer = Array.isArray(t.customers) ? t.customers[0] : t.customers;
+              const contactName = customer?.full_name ?? t.reporter_name ?? 'Anonymous';
+              const contactDetail = customer?.phone ?? customer?.email ?? t.reporter_contact ?? null;
               return (
                 <tr key={t.id}>
                   <td className="p-3">
@@ -103,6 +110,10 @@ export function AdminTicketList({ initialTickets, sites }: { initialTickets: Tic
                       {t.subject}
                     </Link>
                     <p className="text-ink-800/60">{t.ticket_number}</p>
+                  </td>
+                  <td className="p-3 text-ink-800/70">
+                    <div>{contactName}</div>
+                    {contactDetail && <div className="text-xs text-ink-800/50">{contactDetail}</div>}
                   </td>
                   <td className="p-3 text-ink-800/70">{site?.name ?? '—'}</td>
                   <td className={`p-3 capitalize ${PRIORITY_STYLE[t.priority] ?? ''}`}>{t.priority}</td>
@@ -112,7 +123,7 @@ export function AdminTicketList({ initialTickets, sites }: { initialTickets: Tic
             })}
             {tickets.length === 0 && !loading && (
               <tr>
-                <td colSpan={4} className="p-6 text-center text-ink-800/60">
+                <td colSpan={5} className="p-6 text-center text-ink-800/60">
                   No tickets match these filters.
                 </td>
               </tr>

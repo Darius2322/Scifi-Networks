@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const NAV = [
+  { href: '/', label: 'Home' },
   { href: '/packages', label: 'Packages' },
   { href: '/hotspot', label: 'Hotspot' },
   { href: '/get-connected', label: 'Get Connected' },
@@ -114,16 +115,31 @@ function MobileNav() {
         // CSS containing block for `fixed` descendants, which is exactly
         // what broke this menu previously (it rendered, but collapsed to
         // the header's own 64px height instead of the full screen).
-        <div
-          className="fixed inset-0 z-50 bg-black/30 animate-success"
-          onClick={() => setOpen(false)}
-        >
+        //
+        // The close button lives INSIDE this panel, not just the toggle
+        // button in the header behind it — that header button visually sits
+        // underneath this overlay once open, so relying on it alone as the
+        // only way to close made the close affordance easy to miss.
+        <div className="fixed inset-0 z-50 bg-black/30 animate-success" onClick={() => setOpen(false)}>
           <div
             ref={panelRef}
             onClick={(e) => e.stopPropagation()}
-            className="absolute inset-x-0 top-0 bg-paper-50 border-b border-ink-950/10 p-5 pt-20 max-h-screen overflow-y-auto"
+            className="absolute inset-x-0 top-0 bg-paper-50 border-b border-ink-950/10 max-h-screen overflow-y-auto"
           >
-            <nav className="flex flex-col gap-1">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-ink-950/10">
+              <span className="font-display text-base font-semibold text-ink-950">Menu</span>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label="Close menu"
+                className="p-2 -mr-2 text-ink-950 hover:text-signal-500"
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                </svg>
+              </button>
+            </div>
+            <nav className="flex flex-col gap-1 p-5">
               {NAV.map((item, i) => (
                 <Link
                   key={item.href}

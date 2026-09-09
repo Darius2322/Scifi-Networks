@@ -10,7 +10,10 @@ import { NotificationBell } from '@/components/ui/notification-bell';
 const NAV_GROUPS = [
   {
     label: 'Dashboard',
-    items: [{ href: '/wp-admin', label: 'Overview' }],
+    items: [
+      { href: '/wp-admin', label: 'Overview' },
+      { href: '/wp-admin/requests', label: 'Requests' },
+    ],
   },
   {
     label: 'Operations',
