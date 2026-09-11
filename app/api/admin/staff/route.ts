@@ -29,7 +29,7 @@ export async function GET() {
   const supabase = createServiceRoleClient();
   const { data, error } = await supabase
     .from('app_users')
-    .select('id, full_name, username, email, role, site_id, is_active, last_login_at, sites(name)')
+    .select('id, full_name, username, email, role, site_id, is_active, last_login_at, sites!app_users_site_id_fkey(name)')
     .not('role', 'in', '(agent,customer)')
     .order('full_name');
 

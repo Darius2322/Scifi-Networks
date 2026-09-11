@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 type Technician = { id: string; full_name: string; site_id: string | null };
 type Installation = {
@@ -65,7 +66,11 @@ export function InstallationManager({ initialInstallations, technicians }: { ini
               return (
                 <tr key={inst.id}>
                   <td className="p-3">
-                    <p className="font-medium text-ink-950">{inst.ticket_number}</p>
+                    <p className="font-medium text-ink-950">
+                      <Link href={`/wp-admin/installations/${inst.id}`} className="hover:text-signal-500">
+                        {inst.ticket_number}
+                      </Link>
+                    </p>
                     <p className="text-ink-800/60">{pkg?.name ?? 'No package'}</p>
                   </td>
                   <td className="p-3 text-ink-800/70">

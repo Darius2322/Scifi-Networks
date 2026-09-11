@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 type Site = { id: string; name: string };
 type Item = {
@@ -91,7 +92,11 @@ export function AdminInventoryManager({ initialItems, sites }: { initialItems: I
               const isLow = item.current_stock <= item.minimum_stock;
               return (
                 <tr key={item.id}>
-                  <td className="p-3 font-medium text-ink-950">{item.name}</td>
+                  <td className="p-3 font-medium text-ink-950">
+                    <Link href={`/wp-admin/inventory/${item.id}`} className="hover:text-signal-500">
+                      {item.name}
+                    </Link>
+                  </td>
                   <td className="p-3 text-ink-800/70">{site?.name ?? '—'}</td>
                   <td className="p-3 text-ink-800/60 font-mono text-xs">{item.sku}</td>
                   <td className="p-3">

@@ -13,7 +13,7 @@ export default async function AdminStaffPage() {
   const [{ data: staff, error: staffError }, { data: sites }] = await Promise.all([
     supabase
       .from('app_users')
-      .select('id, full_name, username, email, role, site_id, is_active, last_login_at, sites(name)')
+      .select('id, full_name, username, email, role, site_id, is_active, last_login_at, sites!app_users_site_id_fkey(name)')
       .not('role', 'in', '(agent,customer)')
       .order('full_name'),
     supabase.from('sites').select('id, name').eq('is_active', true).order('name'),

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { SiteHeader } from '@/components/marketing/site-header';
 import { SiteFooter } from '@/components/marketing/site-footer';
 import { getActivePackages, getHotspotRequirements } from '@/lib/data/public';
@@ -21,25 +22,39 @@ export default async function HotspotPage() {
     <>
       <SiteHeader />
       <main className="container-page py-14">
-        <h1 className="font-display text-3xl font-semibold text-ink-950">Hotspot Internet</h1>
-        <p className="mt-2 text-ink-800/80 max-w-prose">
-          Quick, flexible Internet access with no long-term contract — ideal for short stays,
-          events, or as a backup connection.
-        </p>
+        <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-10 items-center">
+          <div>
+            <h1 className="font-display text-3xl font-semibold text-ink-950">Hotspot Internet</h1>
+            <p className="mt-2 text-ink-800/80 max-w-prose">
+              Quick, flexible Internet access with no long-term contract — ideal for short stays,
+              events, or as a backup connection.
+            </p>
 
-        <div className="mt-6 flex flex-wrap gap-3">
-          <Link
-            href="/get-connected"
-            className="inline-flex items-center rounded-sm bg-signal-500 px-5 py-3 text-sm font-medium text-white hover:bg-signal-600 transition-colors"
-          >
-            Request Hotspot Service
-          </Link>
-          <Link
-            href="/report-issue"
-            className="inline-flex items-center rounded-sm border border-ink-950/15 px-5 py-3 text-sm font-medium text-ink-950 hover:border-ink-950/30 transition-colors"
-          >
-            Report an Issue
-          </Link>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Link
+                href="/get-connected"
+                className="inline-flex items-center rounded-sm bg-signal-500 px-5 py-3 text-sm font-medium text-white hover:bg-signal-600 transition-colors"
+              >
+                Request Hotspot Service
+              </Link>
+              <Link
+                href="/report-issue"
+                className="inline-flex items-center rounded-sm border border-ink-950/15 px-5 py-3 text-sm font-medium text-ink-950 hover:border-ink-950/30 transition-colors"
+              >
+                Report an Issue
+              </Link>
+            </div>
+          </div>
+
+          <div className="relative aspect-[4/3] overflow-hidden rounded-sm bg-ink-100">
+            <Image
+              src="https://images.unsplash.com/photo-1591370874773-6702e8f12fd8?q=80&w=1000&auto=format&fit=crop"
+              alt="Person using a mobile hotspot connection outdoors"
+              fill
+              sizes="(min-width: 1024px) 40vw, 90vw"
+              className="object-cover"
+            />
+          </div>
         </div>
 
         {requirements.length > 0 && (

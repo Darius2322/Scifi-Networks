@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import { SiteHeader } from '@/components/marketing/site-header';
 import { SiteFooter } from '@/components/marketing/site-footer';
 import { getActiveSites } from '@/lib/data/public';
@@ -16,6 +17,16 @@ export default async function AboutPage() {
       <SiteHeader />
       <main className="container-page py-14 max-w-2xl">
         <h1 className="font-display text-3xl font-semibold text-ink-950">About SciFi Networks</h1>
+
+        <div className="mt-8 relative aspect-[16/9] overflow-hidden rounded-sm bg-ink-100">
+          <Image
+            src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop"
+            alt="Technician installing home internet connectivity equipment"
+            fill
+            sizes="(min-width: 1024px) 60vw, 90vw"
+            className="object-cover"
+          />
+        </div>
 
         <div className="mt-8 space-y-6 text-ink-800/90">
           <p>

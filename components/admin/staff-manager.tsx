@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 type Site = { id: string; name: string };
 type StaffMember = {
@@ -77,7 +78,11 @@ function StaffRow({ member, sites, onChanged }: { member: StaffMember; sites: Si
   return (
     <tr>
       <td className="p-3">
-        <p className="font-medium text-ink-950">{member.full_name}</p>
+        <p className="font-medium text-ink-950">
+          <Link href={`/wp-admin/staff/${member.id}`} className="hover:text-signal-500">
+            {member.full_name}
+          </Link>
+        </p>
         <p className="text-ink-800/60">{member.username}</p>
       </td>
       <td className="p-3">

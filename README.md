@@ -467,6 +467,40 @@ workflow and revenue reporting; notifications already work in-app and are
 structured so an SMS/WhatsApp adapter could be added as an extra delivery
 channel without changing the data model.
 
+## Round 11: real staff bug found, detail pages, status inputs, images
+
+- **Found and fixed the actual staff-visibility bug** — after adding this
+  round's error surfacing, the real cause came back: `sites` and `app_users`
+  have **two** foreign keys connecting them (`app_users.site_id` for "which
+  site a person belongs to," and `sites.manager_id` for "who manages this
+  site"). PostgREST can't guess which relationship a bare `sites(name)`
+  embed means once there's more than one path between two tables, so the
+  query failed outright with an ambiguity error. Fixed by naming the
+  relationship explicitly (`sites!app_users_site_id_fkey(name)`) everywhere
+  staff are queried, and audited the rest of the app for the same pattern —
+  `agents`/`installations` don't currently trigger it, but the fix pattern
+  is now on record if it comes up again with a different table pair.
+- **Home** link added to the nav array (drives both desktop and mobile).
+- **`/wp-admin/requests`** — combined inbox of new installations and open
+  tickets, now with an inline status dropdown on every row so you can act
+  without opening each record individually.
+- **Detail pages with full history for Staff, Inventory items, and
+  Installations** — each shows complete info plus a real timestamped
+  timeline/audit trail (Staff: audit log of that person's actions + their
+  assigned tasks; Inventory: every stock movement ever recorded against
+  that item, who did it, and when; Installations: submission → scheduling →
+  completion timeline pulled from real timestamps and audit entries).
+  Customers already had this from an earlier round.
+- **Tickets list now shows customer name + phone/email** (previously showed
+  none at all).
+- **Images added** to About, Hotspot, and Packages pages — previously text-only.
+
+Run the SQL check from before if you haven't already, to confirm what was
+actually happening: `select id, full_name, role from app_users where role
+not in ('agent','customer');` — but the fix above should resolve it
+regardless of what that query returns, since the bug was in the query
+construction, not the data.
+
 ## What's scaffolded but not yet built out
 
 Every section of the spec now has at least a working foundation, and the

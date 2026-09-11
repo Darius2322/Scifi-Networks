@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import type { Metadata } from 'next';
 import { SiteHeader } from '@/components/marketing/site-header';
 import { SiteFooter } from '@/components/marketing/site-footer';
@@ -18,6 +19,16 @@ export default async function PackagesPage() {
     <>
       <SiteHeader />
       <main className="container-page py-14">
+        <div className="relative aspect-[21/9] sm:aspect-[3/1] overflow-hidden rounded-sm bg-ink-100 mb-10">
+          <Image
+            src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=1600&auto=format&fit=crop"
+            alt="Home Wi-Fi router providing fast internet connectivity"
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
+        </div>
+
         <h1 className="font-display text-3xl font-semibold text-ink-950">Internet Packages</h1>
         <p className="mt-2 text-ink-800/80 max-w-prose">
           Pricing and availability are managed by our team and may vary by location.
