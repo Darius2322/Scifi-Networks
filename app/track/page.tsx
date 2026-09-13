@@ -17,16 +17,21 @@ export default async function TrackEntryPage() {
   return (
     <>
       <SiteHeader />
-      <main className="container-page py-14 max-w-md">
-        <h1 className="font-display text-3xl font-semibold text-ink-950">Track My Request</h1>
-        <p className="mt-2 text-ink-800/80">
+      <main className="container-page section-py max-w-md">
+        <p className="eyebrow">Track Request</p>
+        <h1 className="mt-2 font-display text-3xl font-bold text-ink-950">Track your connection</h1>
+        <p className="mt-2 text-ink-700">
           Enter your ticket number along with the phone number or email you registered.
         </p>
-        <div className="mt-8">
+        <div className="mt-8 card p-6 sm:p-8">
           <TrackLoginForm />
         </div>
-        <p className="mt-6 text-sm text-ink-800/60">
-          Registered as an agent? <a href="/track/agent" className="text-signal-500 hover:text-signal-600">Sign in here</a>.
+        <p className="mt-6 text-sm text-ink-700">
+          Registered as an agent?{' '}
+          <a href="/track/agent" className="text-signal-500 hover:text-signal-600 font-medium">
+            Sign in here
+          </a>
+          .
         </p>
       </main>
       <SiteFooter />

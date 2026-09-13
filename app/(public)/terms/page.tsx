@@ -15,9 +15,9 @@ export default async function TermsPage() {
   return (
     <>
       <SiteHeader />
-      <main className="container-page py-14 max-w-2xl">
-        <h1 className="font-display text-3xl font-semibold text-ink-950">Terms & Conditions</h1>
-        <div className="mt-8 space-y-4 text-ink-800/90 whitespace-pre-line">
+      <main className="container-page section-py max-w-2xl">
+        <h1 className="font-display text-3xl font-bold text-ink-950">Terms & Conditions</h1>
+        <div className="mt-8 space-y-4 text-ink-800 leading-relaxed whitespace-pre-line">
           {content || 'Terms and conditions have not been published yet.'}
         </div>
       </main>

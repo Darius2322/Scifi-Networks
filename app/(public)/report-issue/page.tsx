@@ -16,9 +16,10 @@ export default async function ReportIssuePage() {
   return (
     <>
       <SiteHeader />
-      <main className="container-page py-14 max-w-xl">
-        <h1 className="font-display text-3xl font-semibold text-ink-950">Report an Issue</h1>
-        <p className="mt-2 text-ink-800/80">
+      <main className="container-page section-py max-w-xl">
+        <p className="eyebrow">Support</p>
+        <h1 className="mt-2 font-display text-3xl font-bold text-ink-950">Report an Issue</h1>
+        <p className="mt-2 text-ink-700">
           Spotted a problem with the network? Let us know — you'll get a ticket number to track
           it, and you don't need an account or phone number to report it.
         </p>

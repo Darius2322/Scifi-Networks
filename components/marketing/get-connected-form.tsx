@@ -45,17 +45,14 @@ export function GetConnectedForm({ sites, packages }: { sites: Site[]; packages:
 
   if (ticketNumber) {
     return (
-      <div className="animate-success border border-status-good/30 bg-status-good/5 p-6">
-        <p className="text-sm font-medium text-status-good">Request submitted</p>
-        <p className="mt-2 font-display text-2xl font-semibold text-ink-950">{ticketNumber}</p>
-        <p className="mt-3 text-sm text-ink-800/80 max-w-prose">
+      <div className="animate-success card border-status-good/30 bg-status-good/5 p-6">
+        <p className="text-sm font-semibold text-status-good">Request submitted</p>
+        <p className="mt-2 font-display text-2xl font-bold text-ink-950">{ticketNumber}</p>
+        <p className="mt-3 text-sm text-ink-800 max-w-prose">
           Keep this ticket number. You'll use it together with your phone number or email to
           access and track your request at any time.
         </p>
-        <Link
-          href="/track"
-          className="mt-5 inline-flex items-center rounded-sm bg-signal-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-signal-600 transition-colors"
-        >
+        <Link href="/track" className="btn-accent mt-5">
           Track my request
         </Link>
       </div>
@@ -63,9 +60,9 @@ export function GetConnectedForm({ sites, packages }: { sites: Site[]; packages:
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+    <form onSubmit={handleSubmit} className="card space-y-5 p-6 sm:p-8" noValidate>
       {error && (
-        <p role="alert" className="border border-status-bad/30 bg-status-bad/5 p-3 text-sm text-status-bad">
+        <p role="alert" className="rounded-lg border border-status-bad/30 bg-status-bad/5 p-3 text-sm text-status-bad">
           {error}
         </p>
       )}
@@ -78,12 +75,7 @@ export function GetConnectedForm({ sites, packages }: { sites: Site[]; packages:
         <label htmlFor="site_id" className="block text-sm font-medium text-ink-950">
           Service location
         </label>
-        <select
-          id="site_id"
-          name="site_id"
-          required
-          className="mt-1.5 w-full border border-ink-950/15 bg-paper-50 px-3 py-2.5 text-sm focus:border-signal-500"
-        >
+        <select id="site_id" name="site_id" required className="field mt-1.5">
           <option value="">Select a location</option>
           {sites.map((s) => (
             <option key={s.id} value={s.id}>
@@ -100,12 +92,7 @@ export function GetConnectedForm({ sites, packages }: { sites: Site[]; packages:
         <label htmlFor="package_id" className="block text-sm font-medium text-ink-950">
           Preferred package (optional)
         </label>
-        <select
-          id="package_id"
-          name="package_id"
-          defaultValue={preselectedPackage}
-          className="mt-1.5 w-full border border-ink-950/15 bg-paper-50 px-3 py-2.5 text-sm focus:border-signal-500"
-        >
+        <select id="package_id" name="package_id" defaultValue={preselectedPackage} className="field mt-1.5">
           <option value="">No preference</option>
           {packages.map((p) => (
             <option key={p.id} value={p.id}>
@@ -121,19 +108,10 @@ export function GetConnectedForm({ sites, packages }: { sites: Site[]; packages:
         <label htmlFor="additional_notes" className="block text-sm font-medium text-ink-950">
           Additional notes (optional)
         </label>
-        <textarea
-          id="additional_notes"
-          name="additional_notes"
-          rows={3}
-          className="mt-1.5 w-full border border-ink-950/15 bg-paper-50 px-3 py-2.5 text-sm focus:border-signal-500"
-        />
+        <textarea id="additional_notes" name="additional_notes" rows={3} className="field mt-1.5 h-auto py-3" />
       </div>
 
-      <button
-        type="submit"
-        disabled={submitting}
-        className="inline-flex items-center justify-center rounded-sm bg-signal-500 px-5 py-3 text-sm font-medium text-white hover:bg-signal-600 transition-colors disabled:opacity-60"
-      >
+      <button type="submit" disabled={submitting} className="btn-accent w-full disabled:opacity-60">
         {submitting ? 'Submitting…' : 'Submit request'}
       </button>
     </form>
@@ -167,7 +145,7 @@ function Field({
         required={required}
         autoComplete={autoComplete}
         placeholder={placeholder}
-        className="mt-1.5 w-full border border-ink-950/15 bg-paper-50 px-3 py-2.5 text-sm focus:border-signal-500"
+        className="field mt-1.5"
       />
     </div>
   );

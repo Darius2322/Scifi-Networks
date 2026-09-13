@@ -1,8 +1,8 @@
 import type { Config } from 'tailwindcss';
 
-// Design tokens — Deep Navy + Teal, defined as CSS variables (see
-// app/globals.css) so every class here automatically swaps between light
-// and dark theme values with zero per-component changes.
+// Design tokens — Charcoal + Off-White + SciFi Blue, defined as CSS
+// variables (see app/globals.css) so every class here automatically swaps
+// between light and dark theme values with zero per-component changes.
 const config: Config = {
   content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'],
   theme: {

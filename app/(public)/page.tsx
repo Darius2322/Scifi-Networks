@@ -15,51 +15,32 @@ export default async function HomePage() {
       <StatusStrip sites={sites} />
 
       <main>
-        {/* HERO — asymmetric split, no gradient. Copy leads, a real coverage
-            list stands in for decoration since it's information a visitor
-            actually needs. */}
-        <section className="border-b border-ink-950/10">
-          <div className="container-page grid lg:grid-cols-[1.1fr_0.9fr] gap-12 py-16 lg:py-24 items-center">
+        {/* HERO */}
+        <section className="border-b border-paper-200">
+          <div className="container-page grid lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-16 py-14 lg:py-24 items-center">
             <div>
-              <p className="text-sm font-medium text-signal-500">SciFi Networks</p>
-              <h1 className="mt-3 font-display text-4xl sm:text-5xl font-semibold leading-[1.08] text-ink-950">
-                Connect Beyond Limits.
+              <p className="eyebrow">SciFi Networks</p>
+              <h1 className="mt-4 font-display text-[40px] sm:text-[52px] lg:text-[64px] font-bold leading-[1.05] text-ink-950">
+                Reliable Internet.
+                <br />
+                Built Around You.
               </h1>
-              <p className="mt-5 text-lg text-ink-800 max-w-prose">
-                Fast, reliable internet built for the way you live, work and play. We connect
-                homes and businesses across your area with straightforward pricing, real local
-                support, and installation that actually shows up on time.
+              <p className="mt-5 text-base sm:text-lg text-ink-800 max-w-prose leading-relaxed">
+                Fast, dependable internet for homes and businesses across your area — straightforward
+                pricing, real local support, and installation that shows up when it says it will.
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link
-                  href="/get-connected"
-                  className="inline-flex items-center rounded-sm bg-signal-500 px-5 py-3 text-sm font-medium text-white hover:bg-signal-600 transition-colors"
-                >
+                <Link href="/get-connected" className="btn-accent">
                   Get Connected
                 </Link>
-                <Link
-                  href="/track"
-                  className="inline-flex items-center rounded-sm border border-ink-950/15 px-5 py-3 text-sm font-medium text-ink-950 hover:border-ink-950/30 transition-colors"
-                >
-                  Track My Request
-                </Link>
-                <Link
-                  href="/report-issue"
-                  className="inline-flex items-center rounded-sm border border-status-warn/40 px-5 py-3 text-sm font-medium text-status-warn hover:bg-status-warn/5 transition-colors"
-                >
-                  Report an Issue
-                </Link>
-                <Link
-                  href="/packages"
-                  className="inline-flex items-center px-5 py-3 text-sm font-medium text-ink-800 hover:text-signal-500 transition-colors"
-                >
-                  View Packages →
+                <Link href="/packages" className="btn-secondary">
+                  View Packages
                 </Link>
               </div>
             </div>
 
-            <div className="relative aspect-[4/5] lg:aspect-[3/4] overflow-hidden rounded-sm bg-ink-100">
+            <div className="relative aspect-[4/5] lg:aspect-[3/4] overflow-hidden rounded-2xl bg-paper-200">
               <Image
                 src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=1200&auto=format&fit=crop"
                 alt="Fiber network technician working on connectivity infrastructure"
@@ -72,88 +53,120 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* COVERAGE — real content, doubles as visual structure */}
-        <section className="border-b border-ink-950/10 bg-paper-100">
-          <div className="container-page py-14">
-            <h2 className="font-display text-2xl font-semibold text-ink-950">Where we operate</h2>
-            <div className="mt-6 grid sm:grid-cols-2 gap-4">
-              {sites.length > 0
-                ? sites.map((site) => (
-                    <div key={site.id} className="border border-ink-950/10 bg-paper-50 p-5">
-                      <p className="font-medium text-ink-950">{site.name}</p>
-                      <p className="mt-1 text-sm text-ink-800/70">
-                        Installations, support, and agents serving {site.name} and surrounding areas.
-                      </p>
+        {/* COVERAGE */}
+        <section id="coverage" className="border-b border-paper-200 bg-paper-100 scroll-mt-20">
+          <div className="container-page section-py">
+            <p className="eyebrow">Coverage</p>
+            <h2 className="mt-2 font-display text-2xl sm:text-3xl font-bold text-ink-950">Is SciFi available where you live?</h2>
+            <p className="mt-2 text-ink-700 max-w-prose">
+              We currently serve the following areas, with installations, support, and local agents on the ground.
+            </p>
+            <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {sites.length > 0 ? (
+                sites.map((site) => (
+                  <div key={site.id} className="card card-hover p-5">
+                    <div className="flex items-center gap-2">
+                      <span className="inline-block h-2 w-2 rounded-full bg-status-good" aria-hidden="true" />
+                      <p className="font-semibold text-ink-950">{site.name}</p>
                     </div>
-                  ))
-                : (
-                  <p className="text-sm text-ink-800/70">Service locations will appear here once configured.</p>
-                )}
+                    <p className="mt-2 text-sm text-ink-700">
+                      Installations, support, and agents serving {site.name} and surrounding areas.
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-sm text-ink-700">Service locations will appear here once configured.</p>
+              )}
             </div>
           </div>
         </section>
 
         {/* PACKAGES PREVIEW */}
         {packages.length > 0 && (
-          <section className="border-b border-ink-950/10">
-            <div className="container-page py-14">
-              <div className="flex items-baseline justify-between">
-                <h2 className="font-display text-2xl font-semibold text-ink-950">Packages</h2>
-                <Link href="/packages" className="text-sm font-medium text-signal-500 hover:text-signal-600">
+          <section className="border-b border-paper-200">
+            <div className="container-page section-py">
+              <div className="flex items-end justify-between gap-4">
+                <div>
+                  <p className="eyebrow">Packages</p>
+                  <h2 className="mt-2 font-display text-2xl sm:text-3xl font-bold text-ink-950">Straightforward pricing</h2>
+                </div>
+                <Link href="/packages" className="btn-ghost hidden sm:inline-flex whitespace-nowrap">
                   See all packages →
                 </Link>
               </div>
-              <div className="mt-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {packages.slice(0, 4).map((pkg) => (
-                  <div key={pkg.id} className="border border-ink-950/10 p-5 flex flex-col">
-                    <p className="font-medium text-ink-950">{pkg.name}</p>
-                    <p className="mt-1 text-sm text-ink-800/70">{pkg.speed_mbps} Mbps</p>
-                    <p className="mt-4 font-display text-2xl font-semibold text-ink-950">
-                      KES {Number(pkg.price_kes).toLocaleString()}
-                      <span className="text-sm font-body font-normal text-ink-800/60"> /mo</span>
-                    </p>
-                    <Link
-                      href="/get-connected"
-                      className="mt-5 text-sm font-medium text-signal-500 hover:text-signal-600"
+
+              <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                {packages.slice(0, 4).map((pkg, i) => {
+                  // Presentational heuristic only: the second tier is highlighted
+                  // as the commonly-recommended option. No business data implies
+                  // this — swap for a real `is_recommended` flag if one is added.
+                  const recommended = i === 1;
+                  return (
+                    <div
+                      key={pkg.id}
+                      className={`card card-hover flex flex-col p-6 ${recommended ? 'border-signal-500/50 ring-1 ring-signal-500/20' : ''}`}
                     >
-                      Get Connected →
-                    </Link>
-                  </div>
-                ))}
+                      {recommended && (
+                        <span className="badge bg-signal-500/10 text-signal-500 self-start mb-3">Most Popular</span>
+                      )}
+                      <p className="font-semibold text-ink-950">{pkg.name}</p>
+                      <p className="mt-1 text-sm text-ink-700">{pkg.speed_mbps} Mbps</p>
+                      <p className="mt-5 font-display text-3xl font-bold text-ink-950">
+                        KES {Number(pkg.price_kes).toLocaleString()}
+                        <span className="text-sm font-medium text-ink-700"> /mo</span>
+                      </p>
+                      <Link href="/get-connected" className="btn-secondary mt-6 w-full">
+                        Get Connected
+                      </Link>
+                    </div>
+                  );
+                })}
               </div>
+
+              <Link href="/packages" className="btn-ghost mt-6 inline-flex sm:hidden">
+                See all packages →
+              </Link>
             </div>
           </section>
         )}
 
-        {/* HOW IT WORKS — genuinely sequential, so numbering is earned here */}
-        <section className="border-b border-ink-950/10 bg-paper-100">
-          <div className="container-page py-14">
-            <h2 className="font-display text-2xl font-semibold text-ink-950">How it works</h2>
-            <ol className="mt-6 grid sm:grid-cols-3 gap-6">
-              <Step n={1} title="Choose a package" body="Compare speeds and pricing for your area, then submit a request." />
-              <Step n={2} title="Get your ticket" body="We generate a ticket number the moment your request is submitted." />
-              <Step n={3} title="Track and connect" body="Follow your installation status from request to active connection." />
+        {/* HOW IT WORKS */}
+        <section className="border-b border-paper-200 bg-paper-100">
+          <div className="container-page section-py">
+            <p className="eyebrow">How it works</p>
+            <h2 className="mt-2 font-display text-2xl sm:text-3xl font-bold text-ink-950">From request to connected</h2>
+            <ol className="mt-10 grid sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
+              <Step n={1} title="Choose your package" body="Compare speeds and pricing for your area." />
+              <Step n={2} title="Submit your request" body="We generate a ticket number the moment you apply." />
+              <Step n={3} title="Track your installation" body="Follow your status from request to install." />
+              <Step n={4} title="Get connected" body="Your technician arrives and you're online." />
             </ol>
           </div>
         </section>
 
         {/* AGENT PROGRAM CALLOUT */}
-        <section>
-          <div className="container-page py-14">
-            <div className="border border-ink-950/10 p-8 sm:p-10 flex flex-col sm:flex-row sm:items-center gap-6 justify-between">
-              <div>
-                <h2 className="font-display text-xl font-semibold text-ink-950">Become a SciFi Networks agent</h2>
-                <p className="mt-2 text-ink-800/80 max-w-prose">
-                  Agents help look after local equipment and report issues in their area, and receive
-                  free Internet vouchers in return. Ask your local site office to learn more.
-                </p>
+        <section id="agents" className="border-b border-paper-200 scroll-mt-20">
+          <div className="container-page section-py">
+            <div className="card p-8 sm:p-12">
+              <div className="flex flex-col lg:flex-row lg:items-center gap-8 justify-between">
+                <div className="max-w-lg">
+                  <p className="eyebrow">Agent Program</p>
+                  <h2 className="mt-2 font-display text-2xl font-bold text-ink-950">Become a SciFi Networks agent</h2>
+                  <p className="mt-2 text-ink-700">
+                    Help keep your neighbourhood connected — look after local equipment, report issues, and support
+                    customers nearby.
+                  </p>
+                  <Link href="/contact" className="btn-primary mt-6">
+                    Contact a site office
+                  </Link>
+                </div>
+                <ol className="grid grid-cols-2 gap-x-6 gap-y-5 sm:min-w-[320px]">
+                  <AgentStep n={1} label="Look after local equipment" />
+                  <AgentStep n={2} label="Report network issues" />
+                  <AgentStep n={3} label="Help customers" />
+                  <AgentStep n={4} label="Earn free internet vouchers" />
+                </ol>
               </div>
-              <Link
-                href="/contact"
-                className="inline-flex items-center rounded-sm border border-ink-950/15 px-5 py-3 text-sm font-medium text-ink-950 hover:border-ink-950/30 transition-colors whitespace-nowrap"
-              >
-                Contact a site office
-              </Link>
             </div>
           </div>
         </section>
@@ -168,10 +181,21 @@ export default async function HomePage() {
 
 function Step({ n, title, body }: { n: number; title: string; body: string }) {
   return (
-    <li className="border-t border-ink-950/15 pt-4">
-      <span className="text-sm text-signal-500 font-medium">Step {n}</span>
-      <p className="mt-1 font-medium text-ink-950">{title}</p>
-      <p className="mt-1 text-sm text-ink-800/70">{body}</p>
+    <li className="relative pl-0">
+      <span className="font-display text-4xl font-bold text-signal-500/25">{String(n).padStart(2, '0')}</span>
+      <p className="mt-3 font-semibold text-ink-950">{title}</p>
+      <p className="mt-1.5 text-sm text-ink-700 leading-relaxed">{body}</p>
+    </li>
+  );
+}
+
+function AgentStep({ n, label }: { n: number; label: string }) {
+  return (
+    <li className="flex items-start gap-2.5">
+      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-signal-500/10 text-[11px] font-semibold text-signal-500">
+        {n}
+      </span>
+      <span className="text-sm text-ink-800 leading-snug">{label}</span>
     </li>
   );
 }

@@ -1,19 +1,14 @@
 import type { Metadata, Viewport } from 'next';
-import { Manrope, Inter } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './globals.css';
 import { ServiceWorkerRegistration } from '@/components/service-worker-registration';
 
-// Per design spec: Manrope for headings (a little personality), Inter for
-// everything else (body, forms, dashboards, numbers) — stays highly
-// readable across phones, tablets, and desktops in both themes.
-const display = Manrope({
-  subsets: ['latin'],
-  weight: ['600', '700'],
-  variable: '--font-display',
-  display: 'swap',
-});
-
-const body = Inter({
+// Per design spec: Inter only, across every weight — 400 body, 500
+// labels/nav, 600 buttons/subheadings, 700 major headings. One typeface
+// keeps the interface calm and avoids a "templated" multi-font feel.
+// --font-display is kept as an alias of the same font so existing
+// components that reference font-display need no further changes.
+const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
   variable: '--font-body',
@@ -38,15 +33,15 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#0F172A',
+  themeColor: '#111111',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${display.variable} ${body.variable}`}>
+    <html lang="en" className={inter.variable}>
       <head>
-        {/* Sets the theme before first paint, defaulting to dark per the
-            dark-mode-first design direction, so there's no flash of the
+        {/* Sets the theme before first paint, defaulting to light (the
+            off-white/charcoal design direction), so there's no flash of the
             wrong theme while the ThemeToggle component hydrates. */}
         <script
           dangerouslySetInnerHTML={{
@@ -54,10 +49,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               (function () {
                 try {
                   var stored = localStorage.getItem('scifi-theme');
-                  var theme = stored === 'light' ? 'light' : 'dark';
+                  var theme = stored === 'dark' ? 'dark' : 'light';
                   document.documentElement.setAttribute('data-theme', theme);
                 } catch (e) {
-                  document.documentElement.setAttribute('data-theme', 'dark');
+                  document.documentElement.setAttribute('data-theme', 'light');
                 }
               })();
             `,

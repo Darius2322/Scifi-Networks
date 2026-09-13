@@ -36,7 +36,7 @@ export function ReviewForm() {
 
   if (submitted) {
     return (
-      <div className="animate-success border border-status-good/30 bg-status-good/5 p-5 text-sm text-status-good">
+      <div className="animate-success card border-status-good/30 bg-status-good/5 p-5 text-sm text-status-good">
         Thanks for the feedback — your review will appear once reviewed.
       </div>
     );
@@ -45,7 +45,7 @@ export function ReviewForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
       {error && (
-        <p role="alert" className="border border-status-bad/30 bg-status-bad/5 p-3 text-sm text-status-bad">
+        <p role="alert" className="rounded-lg border border-status-bad/30 bg-status-bad/5 p-3 text-sm text-status-bad">
           {error}
         </p>
       )}
@@ -58,7 +58,7 @@ export function ReviewForm() {
           id="name"
           name="name"
           required
-          className="mt-1.5 w-full border border-ink-950/15 bg-paper-50 px-3 py-2.5 text-sm focus:border-signal-500"
+          className="field mt-1.5"
         />
       </div>
 
@@ -71,7 +71,7 @@ export function ReviewForm() {
               type="button"
               onClick={() => setRating(n)}
               aria-label={`${n} star${n > 1 ? 's' : ''}`}
-              className={n <= rating ? 'text-signal-500' : 'text-ink-950/20'}
+              className={n <= rating ? 'text-signal-500' : 'text-ink-700/30'}
             >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                 <path d="M12 2l2.9 6.6 7.1.7-5.4 4.7 1.6 7-6.2-3.7-6.2 3.7 1.6-7L2 9.3l7.1-.7z" />
@@ -90,15 +90,11 @@ export function ReviewForm() {
           name="comment"
           required
           rows={4}
-          className="mt-1.5 w-full border border-ink-950/15 bg-paper-50 px-3 py-2.5 text-sm focus:border-signal-500"
+          className="field mt-1.5"
         />
       </div>
 
-      <button
-        type="submit"
-        disabled={submitting}
-        className="inline-flex items-center justify-center rounded-sm bg-signal-500 px-5 py-3 text-sm font-medium text-white hover:bg-signal-600 transition-colors disabled:opacity-60"
-      >
+      <button type="submit" disabled={submitting} className="btn-accent w-full disabled:opacity-60">
         {submitting ? 'Submitting…' : 'Submit review'}
       </button>
     </form>

@@ -11,7 +11,7 @@ export function StatusTimeline({ currentStatus, stages }: { currentStatus: strin
   // "rejected" / "cancelled" are terminal off-path states — show distinctly.
   if (currentStatus === 'rejected' || currentStatus === 'cancelled') {
     return (
-      <div className="border border-status-bad/30 bg-status-bad/5 p-4 text-sm text-status-bad">
+      <div className="rounded-lg border border-status-bad/30 bg-status-bad/5 p-4 text-sm text-status-bad">
         This request was {currentStatus}. Contact support if you believe this is a mistake.
       </div>
     );
@@ -34,16 +34,16 @@ export function StatusTimeline({ currentStatus, stages }: { currentStatus: strin
                     ? 'bg-signal-500 text-white'
                     : isCurrent
                     ? 'bg-signal-500/15 text-signal-500 ring-2 ring-signal-500'
-                    : 'bg-ink-950/5 text-ink-800/40'
+                    : 'bg-paper-200 text-ink-700/60'
                 }`}
               >
                 {isDone ? '✓' : i + 1}
               </span>
               {i < stages.length - 1 && (
-                <span className={`hidden sm:block h-px flex-1 ${isDone ? 'bg-signal-500' : 'bg-ink-950/10'}`} />
+                <span className={`hidden sm:block h-px flex-1 ${isDone ? 'bg-signal-500' : 'bg-paper-200'}`} />
               )}
             </div>
-            <p className={`mt-0 sm:mt-2 text-sm ${isCurrent ? 'font-medium text-ink-950' : 'text-ink-800/70'}`}>
+            <p className={`mt-0 sm:mt-2 text-sm ${isCurrent ? 'font-semibold text-ink-950' : 'text-ink-700'}`}>
               {LABELS[stage] ?? stage}
             </p>
           </li>

@@ -50,7 +50,7 @@ export function MobileBottomNav() {
   return (
     <nav
       aria-label="Primary"
-      className="sm:hidden fixed bottom-0 inset-x-0 z-30 bg-paper-100 border-t border-ink-950/10 flex"
+      className="sm:hidden fixed bottom-0 inset-x-0 z-30 bg-paper-100 border-t border-paper-200 flex"
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       {ITEMS.map((item) => {
@@ -59,7 +59,7 @@ export function MobileBottomNav() {
           <Link
             key={item.href}
             href={item.href}
-            className={`flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[11px] ${active ? 'text-signal-500' : 'text-ink-800/60'}`}
+            className={`flex-1 flex flex-col items-center gap-0.5 py-2.5 text-[11px] ${active ? 'text-signal-500' : 'text-ink-700'}`}
           >
             {item.icon(active)}
             {item.label}

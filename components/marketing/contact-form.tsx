@@ -37,7 +37,7 @@ export function ContactForm() {
     return (
       <div className="text-center py-8">
         <p className="font-medium text-status-good">Message sent</p>
-        <p className="mt-2 text-sm text-ink-800/70">We'll get back to you as soon as we can.</p>
+        <p className="mt-2 text-sm text-ink-700">We'll get back to you as soon as we can.</p>
       </div>
     );
   }
@@ -45,7 +45,7 @@ export function ContactForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
       {error && (
-        <p role="alert" className="border border-status-bad/30 bg-status-bad/5 p-3 text-sm text-status-bad">
+        <p role="alert" className="rounded-lg border border-status-bad/30 bg-status-bad/5 p-3 text-sm text-status-bad">
           {error}
         </p>
       )}
@@ -64,15 +64,11 @@ export function ContactForm() {
           name="message"
           required
           rows={5}
-          className="mt-1.5 w-full border border-ink-950/15 bg-paper-50 px-3 py-2.5 text-sm focus:border-signal-500"
+          className="field mt-1.5"
         />
       </div>
 
-      <button
-        type="submit"
-        disabled={submitting}
-        className="w-full inline-flex items-center justify-center rounded-sm bg-signal-500 px-5 py-3 text-sm font-medium text-white hover:bg-signal-600 transition-colors disabled:opacity-60"
-      >
+      <button type="submit" disabled={submitting} className="btn-accent w-full disabled:opacity-60">
         {submitting ? 'Sending…' : 'Send message'}
       </button>
     </form>
@@ -91,7 +87,7 @@ function Field({ label, name, required, type = 'text', autoComplete }: any) {
         type={type}
         required={required}
         autoComplete={autoComplete}
-        className="mt-1.5 w-full border border-ink-950/15 bg-paper-50 px-3 py-2.5 text-sm focus:border-signal-500"
+        className="field mt-1.5"
       />
     </div>
   );

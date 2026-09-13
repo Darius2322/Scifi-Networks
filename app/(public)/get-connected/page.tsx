@@ -16,9 +16,10 @@ export default async function GetConnectedPage() {
   return (
     <>
       <SiteHeader />
-      <main className="container-page py-14 max-w-2xl">
-        <h1 className="font-display text-3xl font-semibold text-ink-950">Get Connected</h1>
-        <p className="mt-2 text-ink-800/80">
+      <main className="container-page section-py max-w-2xl">
+        <p className="eyebrow">Get Started</p>
+        <h1 className="mt-2 font-display text-3xl font-bold text-ink-950">Get Connected</h1>
+        <p className="mt-2 text-ink-700">
           Tell us where you are and what you need. We'll generate a ticket number you can use
           to track your installation from request to activation.
         </p>

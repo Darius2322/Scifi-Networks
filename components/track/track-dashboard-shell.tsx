@@ -22,11 +22,11 @@ export function TrackDashboardShell({
 
   return (
     <div className="min-h-screen bg-paper-50">
-      <header className="border-b border-ink-950/10 bg-paper-50">
-        <div className="container-page flex h-16 items-center justify-between">
+      <header className="border-b border-paper-200 bg-paper-100">
+        <div className="container-page flex h-[68px] items-center justify-between">
           <div>
             <p className="font-display text-lg font-semibold text-ink-950">SciFi Networks</p>
-            {customerName && <p className="text-xs text-ink-800/60">Welcome, {customerName}</p>}
+            {customerName && <p className="text-xs text-ink-700">Welcome, {customerName}</p>}
           </div>
           <div className="flex items-center gap-4">
             <Link
@@ -35,7 +35,7 @@ export function TrackDashboardShell({
             >
               Report Issue
             </Link>
-            <button onClick={handleLogout} className="text-sm text-ink-800/70 hover:text-ink-950">
+            <button onClick={handleLogout} className="text-sm text-ink-700 hover:text-ink-950">
               Log out
             </button>
           </div>

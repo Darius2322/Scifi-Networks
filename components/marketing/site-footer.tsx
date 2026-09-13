@@ -33,15 +33,15 @@ export async function SiteFooter() {
   const activeSocial = Object.entries(social).filter(([, url]) => url);
 
   return (
-    <footer className="border-t border-ink-950/10 bg-surface-dark text-white/90">
-      <div className="container-page py-14 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
-        <div>
+    <footer className="bg-surface-dark text-white/90">
+      <div className="container-page py-14 sm:py-16 grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="lg:col-span-1">
           <p className="font-display text-lg font-semibold text-white">SciFi Networks</p>
-          <p className="mt-2 text-sm text-white/70 max-w-[26ch]">
-            Fast, reliable internet built for the way you live, work and play.
+          <p className="mt-2 text-sm text-white/65 max-w-[26ch] leading-relaxed">
+            Reliable internet. Built around you.
           </p>
           {activeSocial.length > 0 && (
-            <div className="mt-4 flex gap-3">
+            <div className="mt-5 flex gap-3">
               {activeSocial.map(([platform, url]) => (
                 <a
                   key={platform}
@@ -49,7 +49,7 @@ export async function SiteFooter() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={platform}
-                  className="text-white/70 hover:text-white transition-colors"
+                  className="text-white/60 hover:text-white transition-colors"
                 >
                   {SOCIAL_ICONS[platform] ?? null}
                 </a>
@@ -61,21 +61,28 @@ export async function SiteFooter() {
         <FooterColumn
           title="Services"
           links={[
-            { href: '/packages', label: 'Internet Packages' },
+            { href: '/packages', label: 'Packages' },
             { href: '/hotspot', label: 'Hotspot' },
             { href: '/get-connected', label: 'Get Connected' },
-            { href: '/track', label: 'Track My Request' },
+          ]}
+        />
+
+        <FooterColumn
+          title="Support"
+          links={[
+            { href: '/track', label: 'Track Request' },
+            { href: '/report-issue', label: 'Report an Issue' },
             { href: '/status', label: 'Network Status' },
+            { href: '/faq', label: 'FAQ' },
           ]}
         />
 
         <FooterColumn
           title="Company"
           links={[
-            { href: '/about', label: 'About Us' },
-            { href: '/faq', label: 'FAQ' },
+            { href: '/about', label: 'About' },
             { href: '/contact', label: 'Contact' },
-            { href: '/terms', label: 'Terms & Conditions' },
+            { href: '/#agents', label: 'Agents' },
           ]}
         />
 
@@ -86,9 +93,14 @@ export async function SiteFooter() {
       </div>
 
       <div className="border-t border-white/10">
-        <div className="container-page py-5 flex items-center justify-between text-xs text-white/60">
+        <div className="container-page py-5 flex flex-col sm:flex-row gap-3 items-center justify-between text-xs text-white/55">
           <span>© {new Date().getFullYear()} SciFi Networks. All rights reserved.</span>
-          <ShareButton className="!text-white/70 hover:!text-white" />
+          <div className="flex items-center gap-5">
+            <Link href="/terms" className="hover:text-white transition-colors">
+              Terms
+            </Link>
+            <ShareButton className="!text-white/60 hover:!text-white" />
+          </div>
         </div>
       </div>
     </footer>

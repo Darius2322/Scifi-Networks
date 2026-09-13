@@ -3,11 +3,11 @@
 import { useEffect, useState } from 'react';
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
     const stored = localStorage.getItem('scifi-theme') as 'light' | 'dark' | null;
-    const initial = stored === 'light' ? 'light' : 'dark';
+    const initial = stored === 'dark' ? 'dark' : 'light';
     setTheme(initial);
     document.documentElement.setAttribute('data-theme', initial);
   }, []);
