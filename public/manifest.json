@@ -1,0 +1,13 @@
+{
+  "name": "SciFi Networks",
+  "short_name": "SciFi Networks",
+  "description": "Fast, reliable internet built for the way you live, work and play.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F8F9F7",
+  "theme_color": "#111111",
+  "icons": [
+    { "src": "/icon", "sizes": "32x32", "type": "image/png" },
+    { "src": "/apple-icon", "sizes": "180x180", "type": "image/png" }
+  ]
+}

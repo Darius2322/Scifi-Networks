@@ -1,0 +1,157 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* ==========================================================================
+     Color system — Charcoal + Off-White + SciFi Blue, per spec. Defined as
+     CSS variables so every Tailwind class built on them (text-ink-950,
+     bg-paper-50, bg-signal-500, text-status-good, etc.) automatically gets
+     the right value in both themes with zero changes needed in individual
+     components.
+     ========================================================================== */
+  :root {
+    /* Single-typeface system: font-display is aliased to the same Inter
+       variable so components can keep using font-display without a second
+       font ever loading. */
+    --font-display: var(--font-body);
+
+    --color-ink-950: 17 17 17;      /* #111111 — primary text / headings (light) */
+    --color-ink-900: 46 125 255;    /* #2E7DFF — link accent (light) */
+    --color-ink-800: 51 51 51;      /* #333333 — body text (light) */
+    --color-ink-700: 102 102 102;   /* #666666 — secondary/muted text (light) */
+
+    --color-paper-50: 248 249 247;  /* #F8F9F7 — main background (light) */
+    --color-paper-100: 255 255 255; /* #FFFFFF — white surface / card (light) */
+    --color-paper-200: 229 231 228; /* #E5E7E4 — border (light) */
+
+    --color-signal-400: 46 125 255; /* #2E7DFF — SciFi accent blue (light) */
+    --color-signal-500: 46 125 255; /* #2E7DFF — primary accent (light) */
+    --color-signal-600: 36 104 217; /* #2468D9 — accent hover (light) */
+
+    --color-status-good: 24 134 75;  /* #18864B */
+    --color-status-warn: 183 121 31; /* #B7791F */
+    --color-status-bad: 197 48 48;   /* #C53030 */
+  }
+
+  [data-theme='dark'] {
+    --color-ink-950: 245 246 244;   /* headings on dark bg */
+    --color-ink-900: 91 155 255;    /* link accent (dark) */
+    --color-ink-800: 209 211 208;   /* body text (dark) */
+    --color-ink-700: 158 161 157;   /* secondary/muted text (dark) */
+
+    --color-paper-50: 15 15 15;     /* main background (dark) */
+    --color-paper-100: 24 24 23;    /* surface / card (dark) */
+    --color-paper-200: 46 46 44;    /* border (dark) */
+
+    --color-signal-400: 91 155 255; /* accent blue (dark) */
+    --color-signal-500: 74 140 255; /* primary accent (dark) */
+    --color-signal-600: 122 172 255;/* accent hover (dark) */
+
+    --color-status-good: 61 179 116;  /* #3DB374 */
+    --color-status-warn: 219 158 61;  /* #DB9E3D */
+    --color-status-bad: 224 90 90;    /* #E05A5A */
+  }
+
+  body {
+    @apply bg-paper-50 text-ink-950 antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+
+  h1, h2, h3 {
+    letter-spacing: -0.015em;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--color-signal-500));
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+
+  .section-py {
+    @apply py-14 sm:py-20;
+  }
+
+  /* ---------------------------------------------------------------------
+     Buttons — one primary, one secondary style used everywhere. 44–48px
+     tall, 8px radius, no pill shapes, restrained hover transition.
+     --------------------------------------------------------------------- */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 h-11 sm:h-12 text-sm font-semibold transition-colors duration-200 whitespace-nowrap;
+  }
+  .btn-primary {
+    @apply btn bg-ink-950 text-paper-50 hover:opacity-90;
+  }
+  .btn-secondary {
+    @apply btn bg-transparent text-ink-950 border border-paper-200 hover:border-ink-950/30;
+  }
+  /* NOTE: intentionally no third "accent" button style. The brief's Buttons
+     section defines exactly two — primary (charcoal) and secondary
+     (outlined) — and white-on-#2E7DFF text only reaches ~3.8:1 contrast,
+     under the 4.5:1 AA threshold for normal text. Every CTA uses one of
+     the two styles above; blue is reserved for links, icons, and badges. */
+  .btn-ghost {
+    @apply btn px-0 h-auto text-signal-600 hover:text-ink-950;
+  }
+
+  /* ---------------------------------------------------------------------
+     Cards — white surface, subtle border, soft radius, minimal shadow.
+     --------------------------------------------------------------------- */
+  .card {
+    @apply bg-paper-100 border border-paper-200 rounded-2xl;
+  }
+  .card-hover {
+    @apply transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-12px_rgb(0_0_0/0.15)];
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium;
+  }
+
+  /* signal-600, not signal-500 — #2E7DFF on off-white/white only computes
+     to ~3.8:1 contrast, under the 4.5:1 AA minimum for normal-size text.
+     signal-600 (#2468D9) reaches ~5.2:1. */
+  .eyebrow {
+    @apply text-xs sm:text-sm font-semibold uppercase tracking-wider text-signal-600;
+  }
+
+  .field {
+    @apply h-12 w-full rounded-lg border border-paper-200 bg-paper-100 px-3.5 text-sm text-ink-950 placeholder:text-ink-700/60 transition-colors focus:border-signal-500 focus:outline-none focus:ring-2 focus:ring-signal-500/20;
+  }
+
+  /* Subtle entrance animation for success/confirmation states */
+  .animate-success {
+    animation: success-in 0.35s ease-out;
+  }
+  @keyframes success-in {
+    from { opacity: 0; transform: translateY(4px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .animate-fade-up {
+    animation: fade-up 0.4s ease-out both;
+  }
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
