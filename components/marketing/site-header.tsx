@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 
 const PRIMARY_NAV = [
+  { href: '/', label: 'Home' },
   { href: '/packages', label: 'Packages' },
   { href: '/#coverage', label: 'Coverage' },
   { href: '/about', label: 'About' },
