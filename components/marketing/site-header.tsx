@@ -3,10 +3,12 @@
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { CartBadge } from '@/components/shop/cart-badge';
 
 const PRIMARY_NAV = [
   { href: '/', label: 'Home' },
   { href: '/packages', label: 'Packages' },
+  { href: '/shop', label: 'Shop' },
   { href: '/#coverage', label: 'Coverage' },
   { href: '/about', label: 'About' },
 ];
@@ -52,6 +54,7 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden md:flex items-center gap-4">
+          <CartBadge />
           <ThemeToggle />
           <Link href="/get-connected" className="btn-primary">
             Get Connected
@@ -59,6 +62,7 @@ export function SiteHeader() {
         </div>
 
         <div className="md:hidden flex items-center gap-1">
+          <CartBadge />
           <ThemeToggle />
           <MobileNav />
         </div>

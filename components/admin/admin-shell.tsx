@@ -30,6 +30,8 @@ const NAV_GROUPS = [
     items: [
       { href: '/wp-admin/sites', label: 'Sites' },
       { href: '/wp-admin/packages', label: 'Packages' },
+      { href: '/wp-admin/products', label: 'Shop Products' },
+      { href: '/wp-admin/orders', label: 'Shop Orders' },
       { href: '/wp-admin/vouchers', label: 'Vouchers' },
       { href: '/wp-admin/payments', label: 'Payments' },
       { href: '/wp-admin/maintenance', label: 'Maintenance' },

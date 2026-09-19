@@ -62,6 +62,7 @@ export async function SiteFooter() {
           title="Services"
           links={[
             { href: '/packages', label: 'Packages' },
+            { href: '/shop', label: 'Shop' },
             { href: '/hotspot', label: 'Hotspot' },
             { href: '/get-connected', label: 'Get Connected' },
           ]}

@@ -123,3 +123,24 @@ export async function getActiveOutagesBySite() {
   }
   return data ?? [];
 }
+
+export async function getActiveProducts(category?: string) {
+  const supabase = createServerSupabase();
+  let query = supabase
+    .from('products')
+    .select('id, name, description, price_kes, category, image_url, stock_qty')
+    .eq('is_active', true)
+    .eq('is_archived', false)
+    .order('category')
+    .order('name');
+
+  if (category) query = query.eq('category', category);
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error('getActiveProducts failed', error.message);
+    return [];
+  }
+  return data ?? [];
+}
