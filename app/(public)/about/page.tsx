@@ -19,7 +19,7 @@ export default async function AboutPage() {
         <p className="eyebrow">About</p>
         <h1 className="mt-2 font-display text-3xl sm:text-4xl font-bold text-ink-950">About SciFi Networks</h1>
 
-        <div className="mt-8 relative aspect-[16/9] overflow-hidden rounded-2xl bg-paper-200">
+        <div className="mt-8 relative aspect-[16/9] overflow-hidden rounded-xl bg-paper-200">
           <Image
             src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop"
             alt="Technician installing home internet connectivity equipment"

@@ -35,8 +35,8 @@ const config: Config = {
         // stay visually consistent regardless of which theme the person
         // has selected for the main content canvas.
         surface: {
-          dark: '#111111',
-          darkhover: '#1F1F1F',
+          dark: '#0A2A5E',
+          darkhover: '#123670',
         },
       },
       fontFamily: {

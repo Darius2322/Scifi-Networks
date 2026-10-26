@@ -18,7 +18,7 @@
   }
 
   /* ==========================================================================
-     Color system — Charcoal + Off-White + SciFi Blue, per spec. Defined as
+     Color system — Navy + SciFi Blue on a light blue-gray page, per the Wi-Fi Portal mockup. Defined as
      CSS variables so every Tailwind class built on them (text-ink-950,
      bg-paper-50, bg-signal-500, text-status-good, etc.) automatically gets
      the right value in both themes with zero changes needed in individual
@@ -30,18 +30,18 @@
        font ever loading. */
     --font-display: var(--font-body);
 
-    --color-ink-950: 17 17 17;      /* #111111 — primary text / headings (light) */
-    --color-ink-900: 46 125 255;    /* #2E7DFF — link accent (light) */
-    --color-ink-800: 51 51 51;      /* #333333 — body text (light) */
-    --color-ink-700: 102 102 102;   /* #666666 — secondary/muted text (light) */
+    --color-ink-950: 11 31 63;      /* #0B1F3F — navy headings (light) */
+    --color-ink-900: 11 87 208;    /* link accent (light) */
+    --color-ink-800: 43 63 92;      /* #2B3F5C — body text (light) */
+    --color-ink-700: 91 107 128;   /* #5B6B80 — muted text (light) */
 
-    --color-paper-50: 248 249 247;  /* #F8F9F7 — main background (light) */
+    --color-paper-50: 244 247 251;  /* #F4F7FB — page background (light) */
     --color-paper-100: 255 255 255; /* #FFFFFF — white surface / card (light) */
-    --color-paper-200: 229 231 228; /* #E5E7E4 — border (light) */
+    --color-paper-200: 227 233 242; /* #E3E9F2 — border (light) */
 
-    --color-signal-400: 46 125 255; /* #2E7DFF — SciFi accent blue (light) */
-    --color-signal-500: 46 125 255; /* #2E7DFF — primary accent (light) */
-    --color-signal-600: 36 104 217; /* #2468D9 — accent hover (light) */
+    --color-signal-400: 59 130 246; /* #3B82F6 — lighter blue (light) */
+    --color-signal-500: 11 87 208; /* #0B57D0 — SciFi blue (light) */
+    --color-signal-600: 10 71 170; /* #0A47AA — blue hover (light) */
 
     --color-status-good: 24 134 75;  /* #18864B */
     --color-status-warn: 183 121 31; /* #B7791F */
@@ -49,17 +49,17 @@
   }
 
   [data-theme='dark'] {
-    --color-ink-950: 245 246 244;   /* headings on dark bg */
-    --color-ink-900: 91 155 255;    /* link accent (dark) */
-    --color-ink-800: 209 211 208;   /* body text (dark) */
-    --color-ink-700: 158 161 157;   /* secondary/muted text (dark) */
+    --color-ink-950: 238 243 250;   /* headings on dark bg */
+    --color-ink-900: 122 172 255;    /* link accent (dark) */
+    --color-ink-800: 200 211 227;   /* body text (dark) */
+    --color-ink-700: 150 165 186;   /* secondary/muted text (dark) */
 
-    --color-paper-50: 15 15 15;     /* main background (dark) */
-    --color-paper-100: 24 24 23;    /* surface / card (dark) */
-    --color-paper-200: 46 46 44;    /* border (dark) */
+    --color-paper-50: 8 20 40;     /* main background (dark) */
+    --color-paper-100: 14 30 58;    /* surface / card (dark) */
+    --color-paper-200: 31 51 86;    /* border (dark) */
 
     --color-signal-400: 91 155 255; /* accent blue (dark) */
-    --color-signal-500: 74 140 255; /* primary accent (dark) */
+    --color-signal-500: 59 130 246; /* primary accent (dark) */
     --color-signal-600: 122 172 255;/* accent hover (dark) */
 
     --color-status-good: 61 179 116;  /* #3DB374 */
@@ -96,19 +96,22 @@
      tall, 8px radius, no pill shapes, restrained hover transition.
      --------------------------------------------------------------------- */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-lg px-5 h-11 sm:h-12 text-sm font-semibold transition-colors duration-200 whitespace-nowrap;
+    @apply inline-flex items-center justify-center gap-2 rounded-md px-5 h-11 sm:h-12 text-sm font-semibold transition-colors duration-200 whitespace-nowrap;
   }
   .btn-primary {
-    @apply btn bg-ink-950 text-paper-50 hover:opacity-90;
+    @apply btn bg-signal-500 text-white hover:bg-signal-600;
   }
   .btn-secondary {
-    @apply btn bg-transparent text-ink-950 border border-paper-200 hover:border-ink-950/30;
+    @apply btn bg-paper-100 text-signal-600 border border-signal-500/40 hover:border-signal-500 hover:bg-signal-500/5;
   }
   /* NOTE: intentionally no third "accent" button style. The brief's Buttons
      section defines exactly two — primary (charcoal) and secondary
      (outlined) — and white-on-#2E7DFF text only reaches ~3.8:1 contrast,
      under the 4.5:1 AA threshold for normal text. Every CTA uses one of
      the two styles above; blue is reserved for links, icons, and badges. */
+  .btn-success {
+    @apply btn bg-status-good text-white hover:opacity-90;
+  }
   .btn-ghost {
     @apply btn px-0 h-auto text-signal-600 hover:text-ink-950;
   }
@@ -117,10 +120,10 @@
      Cards — white surface, subtle border, soft radius, minimal shadow.
      --------------------------------------------------------------------- */
   .card {
-    @apply bg-paper-100 border border-paper-200 rounded-2xl;
+    @apply bg-paper-100 border border-paper-200 rounded-xl shadow-[0_1px_2px_rgb(11_31_63/0.04),0_6px_20px_-10px_rgb(11_31_63/0.12)];
   }
   .card-hover {
-    @apply transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_-12px_rgb(0_0_0/0.15)];
+    @apply transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_10px_28px_-12px_rgb(11_31_63/0.22)];
   }
 
   .badge {
@@ -135,7 +138,7 @@
   }
 
   .field {
-    @apply h-12 w-full rounded-lg border border-paper-200 bg-paper-100 px-3.5 text-sm text-ink-950 placeholder:text-ink-700/60 transition-colors focus:border-signal-500 focus:outline-none focus:ring-2 focus:ring-signal-500/20;
+    @apply h-12 w-full rounded-md border border-paper-200 bg-paper-100 px-3.5 text-sm text-ink-950 placeholder:text-ink-700/60 transition-colors focus:border-signal-500 focus:outline-none focus:ring-2 focus:ring-signal-500/20;
   }
 
   /* Subtle entrance animation for success/confirmation states */

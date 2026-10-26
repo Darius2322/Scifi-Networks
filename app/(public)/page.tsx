@@ -1,13 +1,22 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { SiteHeader } from '@/components/marketing/site-header';
 import { SiteFooter } from '@/components/marketing/site-footer';
 import { StatusStrip } from '@/components/marketing/status-strip';
 import { ReviewsSection } from '@/components/marketing/reviews-section';
-import { getActiveSites, getActivePackages, getPublishedReviews } from '@/lib/data/public';
+import { getActiveSites, getActivePackages, getPublishedReviews, getSiteSettings } from '@/lib/data/public';
 
 export default async function HomePage() {
-  const [sites, packages, reviews] = await Promise.all([getActiveSites(), getActivePackages(), getPublishedReviews()]);
+  const [sites, packages, reviews, settings] = await Promise.all([
+    getActiveSites(),
+    getActivePackages(),
+    getPublishedReviews(),
+    getSiteSettings(),
+  ]);
+
+  // Only show contact buttons that are actually configured — no placeholder numbers.
+  const contact = settings.company_contact ?? {};
+  const phone: string | undefined = contact.phone || undefined;
+  const whatsapp: string | undefined = contact.whatsapp || contact.phone || undefined;
 
   return (
     <>
@@ -15,120 +24,160 @@ export default async function HomePage() {
       <StatusStrip sites={sites} />
 
       <main>
-        {/* HERO */}
+        {/* PORTAL — two-column layout following the Wi-Fi Portal design */}
         <section className="border-b border-paper-200">
-          <div className="container-page grid lg:grid-cols-[1.05fr_0.95fr] gap-12 lg:gap-16 py-14 lg:py-24 items-center">
-            <div>
-              <p className="eyebrow">SciFi Networks</p>
-              <h1 className="mt-4 font-display text-[40px] sm:text-[52px] lg:text-[64px] font-bold leading-[1.05] text-ink-950">
-                Reliable Internet.
-                <br />
-                Built Around You.
-              </h1>
-              <p className="mt-5 text-base sm:text-lg text-ink-800 max-w-prose leading-relaxed">
-                Fast, dependable internet for homes and businesses across your area — straightforward
-                pricing, real local support, and installation that shows up when it says it will.
-              </p>
+          <div className="container-page py-10 sm:py-14">
+            <p className="eyebrow">SciFi Networks</p>
+            <h1 className="mt-2 font-display text-[30px] sm:text-4xl lg:text-5xl font-bold leading-tight text-ink-950">
+              Reliable Internet. Built Around You.
+            </h1>
+            <p className="mt-3 max-w-prose text-ink-700">
+              Fast, dependable internet for homes and businesses — straightforward pricing and real local support.
+            </p>
 
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link href="/get-connected" className="btn-primary">
+            <div className="mt-8 grid lg:grid-cols-2 gap-5 lg:gap-6 items-start">
+              {/* GET CONNECTED */}
+              <div className="card p-6 sm:p-8">
+                <div className="flex items-center gap-3">
+                  <WifiIcon className="h-9 w-9 text-signal-500" />
+                  <h2 className="font-display text-2xl font-bold text-ink-950">Get Connected</h2>
+                </div>
+                <p className="mt-3 text-ink-700 leading-relaxed">
+                  Request an installation and you'll get a ticket number to follow your request from start to finish.
+                </p>
+                <Link href="/get-connected" className="btn-primary mt-6 w-full">
+                  <WifiIcon className="h-5 w-5" />
                   Get Connected
                 </Link>
-                <Link href="/packages" className="btn-secondary">
-                  View Packages
-                </Link>
-              </div>
-            </div>
-
-            <div className="relative aspect-[4/5] lg:aspect-[3/4] overflow-hidden rounded-2xl bg-paper-200">
-              <Image
-                src="https://images.unsplash.com/photo-1544197150-b99a580bb7a8?q=80&w=1200&auto=format&fit=crop"
-                alt="Fiber network technician working on connectivity infrastructure"
-                fill
-                sizes="(min-width: 1024px) 40vw, 90vw"
-                className="object-cover"
-                priority
-              />
-            </div>
-          </div>
-        </section>
-
-        {/* COVERAGE */}
-        <section id="coverage" className="border-b border-paper-200 bg-paper-100 scroll-mt-20">
-          <div className="container-page section-py">
-            <p className="eyebrow">Coverage</p>
-            <h2 className="mt-2 font-display text-2xl sm:text-3xl font-bold text-ink-950">Is SciFi available where you live?</h2>
-            <p className="mt-2 text-ink-700 max-w-prose">
-              We currently serve the following areas, with installations, support, and local agents on the ground.
-            </p>
-            <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {sites.length > 0 ? (
-                sites.map((site) => (
-                  <div key={site.id} className="card card-hover p-5">
-                    <div className="flex items-center gap-2">
-                      <span className="inline-block h-2 w-2 rounded-full bg-status-good" aria-hidden="true" />
-                      <p className="font-semibold text-ink-950">{site.name}</p>
-                    </div>
-                    <p className="mt-2 text-sm text-ink-700">
-                      Installations, support, and agents serving {site.name} and surrounding areas.
-                    </p>
-                  </div>
-                ))
-              ) : (
-                <p className="text-sm text-ink-700">Service locations will appear here once configured.</p>
-              )}
-            </div>
-          </div>
-        </section>
-
-        {/* PACKAGES PREVIEW */}
-        {packages.length > 0 && (
-          <section className="border-b border-paper-200">
-            <div className="container-page section-py">
-              <div className="flex items-end justify-between gap-4">
-                <div>
-                  <p className="eyebrow">Packages</p>
-                  <h2 className="mt-2 font-display text-2xl sm:text-3xl font-bold text-ink-950">Straightforward pricing</h2>
+                <div className="my-5 flex items-center gap-3 text-xs uppercase tracking-wider text-ink-700" aria-hidden="true">
+                  <span className="h-px flex-1 bg-paper-200" />
+                  or
+                  <span className="h-px flex-1 bg-paper-200" />
                 </div>
-                <Link href="/packages" className="btn-ghost hidden sm:inline-flex whitespace-nowrap">
-                  See all packages →
-                </Link>
+                <div className="flex items-start gap-3 rounded-md bg-signal-500/10 p-4 text-sm text-ink-800">
+                  <InfoIcon className="mt-0.5 h-5 w-5 shrink-0 text-signal-500" />
+                  <p>
+                    Already requested?{' '}
+                    <Link href="/track" className="font-semibold text-signal-600 hover:text-ink-950">
+                      Track your request
+                    </Link>{' '}
+                    with your ticket number.
+                  </p>
+                </div>
               </div>
 
-              <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                {packages.slice(0, 4).map((pkg, i) => {
-                  // Presentational heuristic only: the second tier is highlighted
-                  // as the commonly-recommended option. No business data implies
-                  // this — swap for a real `is_recommended` flag if one is added.
-                  const recommended = i === 1;
-                  return (
-                    <div
-                      key={pkg.id}
-                      className={`card card-hover flex flex-col p-6 ${recommended ? 'border-signal-500/50 ring-1 ring-signal-500/20' : ''}`}
+              {/* PACKAGES */}
+              <div className="card overflow-hidden">
+                <div className="p-6 sm:p-8 pb-4">
+                  <div className="flex items-center gap-3">
+                    <CartIcon className="h-8 w-8 text-signal-500" />
+                    <h2 className="font-display text-2xl font-bold text-ink-950">Choose a Package</h2>
+                  </div>
+                  <p className="mt-2 text-sm text-ink-700">Pick a package that suits your needs.</p>
+                </div>
+                {packages.length > 0 ? (
+                  <ul className="divide-y divide-paper-200 border-t border-paper-200">
+                    {packages.slice(0, 4).map((pkg) => (
+                      <li key={pkg.id} className="flex items-center gap-4 px-6 sm:px-8 py-4">
+                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-signal-500 text-white">
+                          <WifiIcon className="h-5 w-5" />
+                        </span>
+                        <div className="min-w-0 flex-1">
+                          <p className="font-semibold text-ink-950 truncate">{pkg.name}</p>
+                          <p className="text-sm text-ink-700">
+                            {pkg.speed_mbps} Mbps • {pkg.duration_days} days
+                          </p>
+                        </div>
+                        <p className="hidden sm:block font-semibold text-ink-950 whitespace-nowrap">
+                          KSh {Number(pkg.price_kes).toLocaleString()}
+                        </p>
+                        <Link
+                          href={`/get-connected?package=${pkg.id}`}
+                          className="btn-primary !h-9 !px-4"
+                          aria-label={`Get ${pkg.name} for KSh ${Number(pkg.price_kes).toLocaleString()}`}
+                        >
+                          <span className="sm:hidden mr-1">KSh {Number(pkg.price_kes).toLocaleString()}</span>
+                          Get
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="border-t border-paper-200 p-6 text-sm text-ink-700">Packages will appear here soon.</p>
+                )}
+                <div className="border-t border-paper-200 px-6 sm:px-8 py-4">
+                  <Link href="/packages" className="text-sm font-semibold text-signal-600 hover:text-ink-950">
+                    Compare all packages →
+                  </Link>
+                </div>
+              </div>
+
+              {/* COVERAGE */}
+              <div id="coverage" className="card p-6 sm:p-8 scroll-mt-24">
+                <div className="flex items-center gap-3">
+                  <PinIcon className="h-7 w-7 text-signal-500" />
+                  <h2 className="font-display text-xl font-bold text-ink-950">Where we operate</h2>
+                </div>
+                <p className="mt-2 text-sm text-ink-700">Is SciFi available where you live?</p>
+                {sites.length > 0 ? (
+                  <ul className="mt-4 divide-y divide-paper-200 rounded-md border border-paper-200">
+                    {sites.map((site) => (
+                      <li key={site.id} className="flex items-center justify-between px-4 py-3 text-sm">
+                        <span className="font-medium text-ink-950">{site.name}</span>
+                        <span className="flex items-center gap-2 text-ink-700">
+                          <span
+                            className={`h-2 w-2 rounded-full ${site.network_status === 'operational' ? 'bg-status-good' : 'bg-status-warn'}`}
+                            aria-hidden="true"
+                          />
+                          {site.network_status === 'operational' ? 'Operational' : 'Service notice'}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="mt-4 text-sm text-ink-700">Service locations will appear here once configured.</p>
+                )}
+              </div>
+
+              {/* NEED HELP */}
+              <div className="card p-6 sm:p-8">
+                <div className="flex items-center gap-3">
+                  <HeadsetIcon className="h-7 w-7 text-signal-500" />
+                  <h2 className="font-display text-xl font-bold text-ink-950">Need Help?</h2>
+                </div>
+                <p className="mt-2 text-sm text-ink-700">Having trouble connecting? Our team is here to help.</p>
+                <div className="mt-5 grid sm:grid-cols-2 gap-3">
+                  {whatsapp && (
+                    <a
+                      href={`https://wa.me/${whatsapp.replace(/\D/g, '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-success"
                     >
-                      {recommended && (
-                        <span className="badge bg-signal-500/10 text-signal-600 self-start mb-3">Most Popular</span>
-                      )}
-                      <p className="font-semibold text-ink-950">{pkg.name}</p>
-                      <p className="mt-1 text-sm text-ink-700">{pkg.speed_mbps} Mbps</p>
-                      <p className="mt-5 font-display text-3xl font-bold text-ink-950">
-                        KES {Number(pkg.price_kes).toLocaleString()}
-                        <span className="text-sm font-medium text-ink-700"> /mo</span>
-                      </p>
-                      <Link href="/get-connected" className="btn-secondary mt-6 w-full">
-                        Get Connected
-                      </Link>
-                    </div>
-                  );
-                })}
+                      Chat on WhatsApp
+                    </a>
+                  )}
+                  {phone && (
+                    <a href={`tel:${phone}`} className="btn-secondary">
+                      Call Support
+                    </a>
+                  )}
+                  {!whatsapp && !phone && (
+                    <Link href="/contact" className="btn-secondary sm:col-span-2">
+                      Contact us
+                    </Link>
+                  )}
+                </div>
+                <p className="mt-4 text-sm text-ink-700">
+                  Something not working?{' '}
+                  <Link href="/report-issue" className="font-semibold text-signal-600 hover:text-ink-950">
+                    Report an issue
+                  </Link>
+                </p>
               </div>
-
-              <Link href="/packages" className="btn-ghost mt-6 inline-flex sm:hidden">
-                See all packages →
-              </Link>
             </div>
-          </section>
-        )}
+          </div>
+        </section>
 
         {/* HOW IT WORKS */}
         <section className="border-b border-paper-200 bg-paper-100">
@@ -144,7 +193,7 @@ export default async function HomePage() {
           </div>
         </section>
 
-        {/* AGENT PROGRAM CALLOUT */}
+        {/* AGENT PROGRAM */}
         <section id="agents" className="border-b border-paper-200 scroll-mt-20">
           <div className="container-page section-py">
             <div className="card p-8 sm:p-12">
@@ -181,7 +230,7 @@ export default async function HomePage() {
 
 function Step({ n, title, body }: { n: number; title: string; body: string }) {
   return (
-    <li className="relative pl-0">
+    <li>
       <span className="font-display text-4xl font-bold text-signal-500/25">{String(n).padStart(2, '0')}</span>
       <p className="mt-3 font-semibold text-ink-950">{title}</p>
       <p className="mt-1.5 text-sm text-ink-700 leading-relaxed">{body}</p>
@@ -197,5 +246,52 @@ function AgentStep({ n, label }: { n: number; label: string }) {
       </span>
       <span className="text-sm text-ink-800 leading-snug">{label}</span>
     </li>
+  );
+}
+
+type IconProps = { className?: string };
+
+function WifiIcon({ className }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M2 8.8a15 15 0 0 1 20 0" />
+      <path d="M5.5 12.4a10 10 0 0 1 13 0" />
+      <path d="M9 16a5 5 0 0 1 6 0" />
+      <circle cx="12" cy="19.5" r="1" fill="currentColor" />
+    </svg>
+  );
+}
+function InfoIcon({ className }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 16v-4M12 8h.01" />
+    </svg>
+  );
+}
+function CartIcon({ className }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M6 6h15l-1.5 9h-12L6 6zm0 0L5 3H2" />
+      <circle cx="9" cy="20" r="1.4" fill="currentColor" />
+      <circle cx="17" cy="20" r="1.4" fill="currentColor" />
+    </svg>
+  );
+}
+function PinIcon({ className }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11z" />
+      <circle cx="12" cy="10" r="2.5" />
+    </svg>
+  );
+}
+function HeadsetIcon({ className }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M4 14v-2a8 8 0 0 1 16 0v2" />
+      <rect x="3" y="14" width="4" height="6" rx="1.5" />
+      <rect x="17" y="14" width="4" height="6" rx="1.5" />
+    </svg>
   );
 }

@@ -43,7 +43,7 @@ export default async function HotspotPage() {
                 </div>
               </div>
 
-              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-paper-200">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-paper-200">
                 <Image
                   src="https://images.unsplash.com/photo-1591370874773-6702e8f12fd8?q=80&w=1000&auto=format&fit=crop"
                   alt="Person using a mobile hotspot connection outdoors"

@@ -11,10 +11,10 @@ const PRIMARY_NAV = [
   { href: '/shop', label: 'Shop' },
   { href: '/#coverage', label: 'Coverage' },
   { href: '/about', label: 'About' },
+  { href: '/track', label: 'Track' },
 ];
 
 const SUPPORT_LINKS = [
-  { href: '/track', label: 'Track Request' },
   { href: '/report-issue', label: 'Report an Issue' },
   { href: '/status', label: 'Network Status' },
   { href: '/faq', label: 'FAQ' },
@@ -39,12 +39,15 @@ export function SiteHeader() {
       }`}
     >
       <div className="container-page flex h-[68px] sm:h-[72px] items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 font-display text-lg font-semibold text-ink-950">
+        <Link href="/" className="flex items-center gap-2.5 text-ink-950" aria-label="SciFi Networks home">
           <LogoMark />
-          SciFi Networks
+          <span className="flex flex-col leading-none">
+            <span className="font-display text-[22px] font-extrabold tracking-tight text-signal-500">SciFi</span>
+            <span className="mt-1 text-[9px] font-semibold uppercase tracking-[0.3em] text-ink-950">Networks</span>
+          </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-ink-800">
+        <nav className="hidden lg:flex items-center gap-6 text-sm font-medium text-ink-800">
           {PRIMARY_NAV.map((item) => (
             <Link key={item.href} href={item.href} className="hover:text-signal-500 transition-colors">
               {item.label}
@@ -53,7 +56,7 @@ export function SiteHeader() {
           <SupportMenu />
         </nav>
 
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden lg:flex items-center gap-4">
           <CartBadge />
           <ThemeToggle />
           <Link href="/get-connected" className="btn-primary">
@@ -61,7 +64,7 @@ export function SiteHeader() {
           </Link>
         </div>
 
-        <div className="md:hidden flex items-center gap-1">
+        <div className="lg:hidden flex items-center gap-1">
           <CartBadge />
           <ThemeToggle />
           <MobileNav />
@@ -73,10 +76,10 @@ export function SiteHeader() {
 
 function LogoMark() {
   return (
-    <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
-      <circle cx="13" cy="20" r="1.8" className="fill-signal-500" />
-      <path d="M8 15.5C10.5 13 15.5 13 18 15.5" className="stroke-signal-500" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M4.5 11.5C9.5 6.8 16.5 6.8 21.5 11.5" className="stroke-ink-950" strokeWidth="1.8" strokeLinecap="round" />
+    <svg width="30" height="30" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+      <circle cx="13" cy="20" r="2" className="fill-signal-500" />
+      <path d="M8 15.5C10.5 13 15.5 13 18 15.5" className="stroke-signal-500" strokeWidth="2" strokeLinecap="round" />
+      <path d="M4.5 11.5C9.5 6.8 16.5 6.8 21.5 11.5" className="stroke-signal-500" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }
@@ -160,7 +163,7 @@ function MobileNav() {
   }, []);
 
   return (
-    <div className="md:hidden">
+    <div className="lg:hidden">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
