@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'One or more items are no longer available.' }, { status: 400 });
   }
 
-  const productMap = new Map(products.map((p) => [p.id, p]));
+  const productMap = new Map(products.map((p: any) => [p.id, p]));
   const lineItems: { product_id: string; product_name: string; unit_price_kes: number; quantity: number; line_total_kes: number }[] = [];
   let subtotal = 0;
 

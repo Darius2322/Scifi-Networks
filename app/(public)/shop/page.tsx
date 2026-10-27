@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export const revalidate = 60;
 
 export default async function ShopPage() {
-  const products = await getActiveProducts();
+  const products: any[] = await getActiveProducts();
 
   const byCategory = products.reduce<Record<string, typeof products>>((acc, p) => {
     (acc[p.category] ??= []).push(p);
