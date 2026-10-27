@@ -25,7 +25,7 @@ export default async function AdminOrdersPage() {
   if (!session) redirect('/wp-admin/login');
   if (!ADMIN_ROLES.includes(session.role)) redirect('/wp-admin/login');
 
-  const supabase = createServiceRoleClient();
+  const supabase: any = createServiceRoleClient();
   const { data: orders } = await supabase
     .from('product_orders')
     .select('id, order_number, customer_name, customer_phone, delivery_address, subtotal_kes, status, mpesa_receipt_number, created_at, product_order_items(product_name, quantity, unit_price_kes)')

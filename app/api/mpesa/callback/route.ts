@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     const callback = body?.Body?.stkCallback;
     if (!callback?.CheckoutRequestID) return ack;
 
-    const supabase = createServiceRoleClient();
+    const supabase: any = createServiceRoleClient();
     const checkoutRequestId = callback.CheckoutRequestID as string;
     const success = callback.ResultCode === 0;
 

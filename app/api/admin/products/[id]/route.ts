@@ -24,7 +24,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     return NextResponse.json({ error: 'Please check the details and try again.' }, { status: 400 });
   }
 
-  const supabase = createServiceRoleClient();
+  const supabase: any = createServiceRoleClient();
   const fields = parsed.data;
 
   const { error } = await supabase

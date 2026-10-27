@@ -14,7 +14,7 @@ export async function GET(req: NextRequest, { params }: { params: { order_number
     return NextResponse.json({ error: 'Too many requests.' }, { status: 429 });
   }
 
-  const supabase = createServiceRoleClient();
+  const supabase: any = createServiceRoleClient();
   const { data: order } = await supabase
     .from('product_orders')
     .select('status')

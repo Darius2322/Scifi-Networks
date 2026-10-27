@@ -125,7 +125,7 @@ export async function getActiveOutagesBySite() {
 }
 
 export async function getActiveProducts(category?: string) {
-  const supabase = createServerSupabase();
+  const supabase: any = createServerSupabase();
   let query = supabase
     .from('products')
     .select('id, name, description, price_kes, category, image_url, stock_qty')

@@ -9,7 +9,7 @@ export default async function AdminProductsPage() {
   if (!session) redirect('/wp-admin/login');
   if (!ADMIN_ROLES.includes(session.role)) redirect('/wp-admin/login');
 
-  const supabase = createServiceRoleClient();
+  const supabase: any = createServiceRoleClient();
   const { data: products } = await supabase
     .from('products')
     .select('id, name, description, price_kes, category, image_url, stock_qty, is_active, is_archived')

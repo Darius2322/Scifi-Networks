@@ -16,7 +16,7 @@ export async function GET() {
   const auth = await requireAdmin();
   if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
 
-  const supabase = createServiceRoleClient();
+  const supabase: any = createServiceRoleClient();
   const { data, error } = await supabase
     .from('products')
     .select('id, name, description, price_kes, category, image_url, stock_qty, is_active, is_archived')
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Please check the product details and try again.' }, { status: 400 });
   }
 
-  const supabase = createServiceRoleClient();
+  const supabase: any = createServiceRoleClient();
   const { data: product, error } = await supabase
     .from('products')
     .insert({

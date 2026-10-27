@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Enter a valid Safaricom M-Pesa number.' }, { status: 400 });
   }
 
-  const supabase = createServiceRoleClient();
+  const supabase: any = createServiceRoleClient();
 
   // Re-read live prices/stock — the only source of truth for the amount charged.
   const productIds = parsed.data.items.map((i) => i.product_id);
